@@ -27,19 +27,23 @@ class DynDataset(Dataset):
 
         return t, x, u, x_dot
     
-def get_test_and_training_data(dataset, train_ratio, further_train_ratio, seed_train_test, seed_actual_train):
+def get_test_and_training_data(dataset, train_ratio, further_train_ratio, seed_train_test=None, seed_actual_train=None):
     # Step 1: Split the dataset into training and testing
-    torch.manual_seed(seed_train_test)
-    np.random.seed(seed_train_test)
+    if seed_train_test is not None:
+        torch.manual_seed(seed_train_test)
+        np.random.seed(seed_train_test)
     print("==> Test-Train split: test_ratio = {:.02f}".format(1-train_ratio))
+    print("==> Test-Train split seed: ", seed_train_test) 
     total_train_size = int(train_ratio * len(dataset))
     test_size = len(dataset) - total_train_size
     total_train_dataset, test_dataset = random_split(dataset, [total_train_size, test_size])
 
     # Step 2: Further split the training dataset to use only a portion of it
-    torch.manual_seed(seed_actual_train)
-    np.random.seed(seed_actual_train)
+    if seed_actual_train is not None:
+        torch.manual_seed(seed_actual_train)
+        np.random.seed(seed_actual_train)
     print("==> Further split: further_train_ratio = {:.02f}".format(further_train_ratio))
+    print("==> Further split seed: ", seed_actual_train)
     actual_train_size = int(further_train_ratio * len(total_train_dataset))
     unused_size = len(total_train_dataset) - actual_train_size
     actual_train_dataset, _ = random_split(total_train_dataset, [actual_train_size, unused_size])

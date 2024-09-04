@@ -20,7 +20,7 @@ from cores.utils.draw_utils import draw_curve
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--exp_num', default=44, type=int, help='test case number')
+    parser.add_argument('--exp_num', default=60, type=int, help='test case number')
     parser.add_argument('--device', default="None", type=str, help='device number')
     args = parser.parse_args()
 
@@ -47,6 +47,23 @@ if __name__ == '__main__':
     # Seed everything
     seed = test_settings["seed"]
     seed_everything(seed)
+
+    # Load dataset and get trainloader
+    train_config = test_settings["train_config"]
+    dataset_num = int(train_config["dataset"])
+    dataset_path = "eg1_Linear/{:03d}/dataset.mat".format(dataset_num)
+    dataset_path = "{}/datasets/{}".format(str(Path(__file__).parent.parent),dataset_path)
+    dataset = DynDataset(dataset_path, config)
+
+    train_ratio = train_config["train_ratio"]
+    further_train_ratio = train_config["further_train_ratio"]
+    train_dataset, test_dataset = get_test_and_training_data(dataset, train_ratio, 
+                        further_train_ratio, seed_train_test=None, seed_actual_train=None)
+
+    batch_size = train_config["batch_size"]
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+    num_epoch = train_config["num_epoch"]
 
     # Build dynamical system
     system_name = test_settings["nominal_system_name"]
@@ -80,25 +97,6 @@ if __name__ == '__main__':
     print("==> Saving initial model weights...")
     model = model.to(device)
     save_nn_weights(model, full_path=os.path.join(results_dir, 'nn_init.pt'))
-
-    # Load dataset and get trainloader
-    train_config = test_settings["train_config"]
-    dataset_num = int(train_config["dataset"])
-    dataset_path = "eg1_Linear/{:03d}/dataset.mat".format(dataset_num)
-    dataset_path = "{}/datasets/{}".format(str(Path(__file__).parent.parent),dataset_path)
-    dataset = DynDataset(dataset_path, config)
-
-    train_ratio = train_config["train_ratio"]
-    further_train_ratio = train_config["further_train_ratio"]
-    seed_train_test = train_config["seed_train_test"]
-    seed_actual_train = train_config["seed_actual_train"]
-    train_dataset, test_dataset = get_test_and_training_data(dataset, train_ratio, further_train_ratio, seed_train_test, seed_actual_train)
-
-    batch_size = train_config["batch_size"]
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
-
-    num_epoch = train_config["num_epoch"]
 
     # Define criterion 
     criterion = lambda x, y: torch.nn.functional.pairwise_distance(x, y).square().mean()

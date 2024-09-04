@@ -4,12 +4,6 @@ mkdir eg1_results/005
 python -u eg1_Linear/train.py --exp_num 5 --device cuda:0 > eg1_results/005/output.out
 mkdir eg1_results/009
 python -u eg1_Linear/train.py --exp_num 9 --device cuda:0 > eg1_results/009/output.out
-mkdir eg1_results/001
-python -u eg1_Linear/train.py --exp_num 1 --device cuda:0 > eg1_results/001/output.out
-mkdir eg1_results/005
-python -u eg1_Linear/train.py --exp_num 5 --device cuda:0 > eg1_results/005/output.out
-mkdir eg1_results/009
-python -u eg1_Linear/train.py --exp_num 9 --device cuda:0 > eg1_results/009/output.out
 mkdir eg1_results/013
 python -u eg1_Linear/train.py --exp_num 13 --device cuda:0 > eg1_results/013/output.out
 mkdir eg1_results/017
@@ -34,3 +28,7 @@ mkdir eg1_results/053
 python -u eg1_Linear/train.py --exp_num 53 --device cuda:0 > eg1_results/053/output.out
 mkdir eg1_results/057
 python -u eg1_Linear/train.py --exp_num 57 --device cuda:0 > eg1_results/057/output.out
+mkdir eg1_results/061
+python -u eg1_Linear/train.py --exp_num 61 --device cuda:0 > eg1_results/061/output.out
+mkdir eg1_results/065
+python -u eg1_Linear/train.py --exp_num 65 --device cuda:0 > eg1_results/065/output.out
