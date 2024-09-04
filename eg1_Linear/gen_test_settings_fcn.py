@@ -12,8 +12,8 @@ def generate_json_script(filename, entry):
             "nn_config": {
                 "in_features": 2,
                 "out_features": 2,
-                "Lipschitz_constant": entry,
-                "layer": "Sandwich",
+                "Lipschitz_constant": 0,
+                "layer": "Plain",
                 "activations": "relu",
                 "num_layers": 8,
                 "width_each_layer": 64,
@@ -42,7 +42,7 @@ def generate_json_script(filename, entry):
                 "num_epoch": 40,
                 "warmup_steps": 8,
                 "lr": 0.001,
-                "wd": 0,
+                "wd": entry,
                 "transform_wd": 0.0,
                 "transform_lr": 0.0,
                 "lip_reg_param": 0.0
@@ -51,9 +51,9 @@ def generate_json_script(filename, entry):
     with open(filename, 'w') as file:
         json.dump(data, file, indent=4)
 
-data = [1, 2, 4, 8]
+data = [1e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
 data.sort()
-start = 9
+start = 29
 exp_nums = range(start, start+len(data))
 files = [os.path.join(str(Path(__file__).parent.parent), 'eg1_Linear', 'test_settings', f"test_settings_{exp_num:03}.json") for exp_num in exp_nums]
 

@@ -12,9 +12,9 @@ def generate_json_script(filename, entry):
             "nn_config": {
                 "in_features": 2,
                 "out_features": 2,
-                "Lipschitz_constant": entry,
-                "layer": "Sandwich",
-                "activations": "relu",
+                "Lipschitz_constant": 0,
+                "layer": "Lip_Reg",
+                "activations": "leaky_relu",
                 "num_layers": 8,
                 "width_each_layer": 64,
                 "input_bias": [
@@ -22,15 +22,15 @@ def generate_json_script(filename, entry):
                     0.0
                 ],
                 "input_transform_to_inverse": [
-                    1.9646,
-                    1.9646
+                    0.0,
+                    0.0
                 ],
                 "output_transform": [
-                    3.9366,
-                    3.9363
+                    0.0,
+                    0.0
                 ],
                 "train_transform": 0,
-                "zero_at_zero": 1
+                "zero_at_zero": 0
             },
             "train_config": {
                 "dataset": "1",
@@ -41,19 +41,19 @@ def generate_json_script(filename, entry):
                 "batch_size": 256,
                 "num_epoch": 40,
                 "warmup_steps": 8,
-                "lr": 0.001,
+                "lr": 0.01,
                 "wd": 0,
                 "transform_wd": 0.0,
                 "transform_lr": 0.0,
-                "lip_reg_param": 0.0
+                "lip_reg_param": entry
             }
         }
     with open(filename, 'w') as file:
         json.dump(data, file, indent=4)
 
-data = [1, 2, 4, 8]
+data = [1e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
 data.sort()
-start = 9
+start = 53
 exp_nums = range(start, start+len(data))
 files = [os.path.join(str(Path(__file__).parent.parent), 'eg1_Linear', 'test_settings', f"test_settings_{exp_num:03}.json") for exp_num in exp_nums]
 
