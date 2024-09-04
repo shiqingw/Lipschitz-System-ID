@@ -1,32 +1,26 @@
-mkdir eg1_results/003
-python -u eg1_Linear/train.py --exp_num 3 --device cuda:2 > eg1_results/003/output.out
-mkdir eg1_results/007
-python -u eg1_Linear/train.py --exp_num 7 --device cuda:2 > eg1_results/007/output.out
-mkdir eg1_results/011
-python -u eg1_Linear/train.py --exp_num 11 --device cuda:2 > eg1_results/011/output.out
-mkdir eg1_results/015
-python -u eg1_Linear/train.py --exp_num 15 --device cuda:2 > eg1_results/015/output.out
-mkdir eg1_results/019
-python -u eg1_Linear/train.py --exp_num 19 --device cuda:2 > eg1_results/019/output.out
-mkdir eg1_results/023
-python -u eg1_Linear/train.py --exp_num 23 --device cuda:2 > eg1_results/023/output.out
-mkdir eg1_results/027
-python -u eg1_Linear/train.py --exp_num 27 --device cuda:2 > eg1_results/027/output.out
-mkdir eg1_results/031
-python -u eg1_Linear/train.py --exp_num 31 --device cuda:2 > eg1_results/031/output.out
-mkdir eg1_results/035
-python -u eg1_Linear/train.py --exp_num 35 --device cuda:2 > eg1_results/035/output.out
-mkdir eg1_results/039
-python -u eg1_Linear/train.py --exp_num 39 --device cuda:2 > eg1_results/039/output.out
-mkdir eg1_results/043
-python -u eg1_Linear/train.py --exp_num 43 --device cuda:2 > eg1_results/043/output.out
-mkdir eg1_results/047
-python -u eg1_Linear/train.py --exp_num 47 --device cuda:2 > eg1_results/047/output.out
-mkdir eg1_results/051
-python -u eg1_Linear/train.py --exp_num 51 --device cuda:2 > eg1_results/051/output.out
-mkdir eg1_results/055
-python -u eg1_Linear/train.py --exp_num 55 --device cuda:2 > eg1_results/055/output.out
-mkdir eg1_results/059
-python -u eg1_Linear/train.py --exp_num 59 --device cuda:2 > eg1_results/059/output.out
-mkdir eg1_results/063
-python -u eg1_Linear/train.py --exp_num 63 --device cuda:2 > eg1_results/063/output.out
+mkdir eg1_results/069
+python -u eg1_Linear/train.py --exp_num 69 --device cuda:2 > eg1_results/069/output.out
+mkdir eg1_results/073
+python -u eg1_Linear/train.py --exp_num 73 --device cuda:2 > eg1_results/073/output.out
+mkdir eg1_results/077
+python -u eg1_Linear/train.py --exp_num 77 --device cuda:2 > eg1_results/077/output.out
+mkdir eg1_results/081
+python -u eg1_Linear/train.py --exp_num 81 --device cuda:2 > eg1_results/081/output.out
+mkdir eg1_results/085
+python -u eg1_Linear/train.py --exp_num 85 --device cuda:2 > eg1_results/085/output.out
+mkdir eg1_results/089
+python -u eg1_Linear/train.py --exp_num 89 --device cuda:2 > eg1_results/089/output.out
+mkdir eg1_results/093
+python -u eg1_Linear/train.py --exp_num 93 --device cuda:2 > eg1_results/093/output.out
+mkdir eg1_results/097
+python -u eg1_Linear/train.py --exp_num 97 --device cuda:2 > eg1_results/097/output.out
+mkdir eg1_results/101
+python -u eg1_Linear/train.py --exp_num 101 --device cuda:2 > eg1_results/101/output.out
+mkdir eg1_results/105
+python -u eg1_Linear/train.py --exp_num 105 --device cuda:2 > eg1_results/105/output.out
+mkdir eg1_results/109
+python -u eg1_Linear/train.py --exp_num 109 --device cuda:2 > eg1_results/109/output.out
+mkdir eg1_results/113
+python -u eg1_Linear/train.py --exp_num 113 --device cuda:2 > eg1_results/113/output.out
+mkdir eg1_results/117
+python -u eg1_Linear/train.py --exp_num 117 --device cuda:2 > eg1_results/117/output.out

@@ -55,7 +55,7 @@ train_ratios = [0.25, 0.5, 1.0]
 train_ratios.sort()
 gammas = [0.5, 1, 2, 4, 8, 16]
 gammas.sort()
-random_seeds = [0]
+random_seeds = [100, 200, 300]
 random_seeds.sort()
 
 # iterate over all combinations of gammas, train_ratios, and random_seeds and generate a test_settings file for each
@@ -69,7 +69,7 @@ for train_ratio in train_ratios:
                 "random_seed": random_seed
             })
 
-start = 1
+start = 67
 exp_nums = range(start, start+len(data))
 for i in range(len(data)):
     entry = data[i]
