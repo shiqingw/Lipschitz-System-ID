@@ -9,6 +9,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 import matplotlib
 import matplotlib.pyplot as plt
 from scipy.spatial import ConvexHull
+import pickle
 
 from cores.lip_nn.models import NeuralNetwork
 from cores.dynamical_systems.create_system import get_system
@@ -16,81 +17,30 @@ from cores.utils.utils import seed_everything, get_nn_config, load_dict, load_nn
 from cores.utils.config import Configuration
 from cores.dataloader.dataset_utils import DynDataset, get_test_and_training_data
 
-def save_grid(dataset_num, grid_size):
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--exp_num', default=exp_num, type=int, help='test case number')
-    parser.add_argument('--device', default="None", type=str, help='device number')
-    args = parser.parse_args()
+def polygon_area(vertices):
+    """
+    Calculate the area of a polygon using the Shoelace Theorem.
 
-    exp_num = args.exp_num
-    print("==> Exp Num:", exp_num)
-    results_dir = "{}/eg1_results/{:03d}".format(str(Path(__file__).parent.parent), exp_num)
-    if not os.path.exists(results_dir):
-        results_dir = "{}/eg1_results/{:03d}_keep".format(str(Path(__file__).parent.parent), exp_num)
-    test_settings_path = os.path.join(results_dir, "test_settings_{:03d}.json".format(exp_num))
-    with open(test_settings_path, "r", encoding="utf8") as f:
-        test_settings = json.load(f)
+    :param vertices: List of tuples (x, y) representing the vertices of the polygon.
+    :return: The area of the polygon.
+    """
+    n = len(vertices)  # Number of vertices
+    area = 0
+    
+    # Applying the Shoelace Theorem
+    for i in range(n):
+        x1, y1 = vertices[i]
+        x2, y2 = vertices[(i + 1) % n]  # The next vertex, wrap around using modulo
+        area += x1 * y2 - x2 * y1
+    
+    return abs(area) / 2
 
-    # Decide torch device
+def get_grid(dataset_num, grid_size):
     config = Configuration()
-    user_device = args.device
-    if user_device != "None":
-        config.device = torch.device(user_device)
-    device = config.device
-    print('==> torch device: ', device)
-
-    # Seed everything
-    seed = test_settings["seed"]
-    seed_everything(seed)
-
-    # Load dataset and get trainloader
-    train_config = test_settings["train_config"]
-    dataset_num = int(train_config["dataset"])
-    dataset_path = "eg1_Linear/{:03d}/dataset.mat".format(dataset_num)
-    dataset_path = "{}/datasets/{}".format(str(Path(__file__).parent.parent),dataset_path)
-    dataset = DynDataset(dataset_path, config)
-
-    train_ratio = train_config["train_ratio"]
-    further_train_ratio = train_config["further_train_ratio"]
-    _, test_dataset = get_test_and_training_data(dataset, train_ratio, 
-                        further_train_ratio, seed_train_test=None, seed_actual_train=None)
-
-    # Build neural network
-    nn_config = test_settings["nn_config"]
-    input_bias = np.array(nn_config["input_bias"], dtype=config.np_dtype)
-    input_transform = np.array(nn_config["input_transform_to_inverse"], dtype=config.np_dtype)
-    input_transform = np.zeros_like(input_transform)
-    output_transform = np.array(nn_config["output_transform"], dtype=config.np_dtype)
-    train_transform = bool(nn_config["train_transform"])
-    zero_at_zero = bool(nn_config["zero_at_zero"])
-
-    nn_config = get_nn_config(nn_config)
-    if nn_config.layer == 'Lip_Reg':
-        model = NeuralNetwork(nn_config, input_bias=None, input_transform=None, output_transform=None, train_transform=train_transform, zero_at_zero=False)
-    else:
-        model = NeuralNetwork(nn_config, input_bias, input_transform, output_transform, train_transform, zero_at_zero)
-    if nn_config.layer == 'Sandwich':
-        print("==> Gamma: {:.02f}".format(nn_config.gamma))
-
-    model = load_nn_weights(model, os.path.join(results_dir, 'nn_best.pt'), device)
-    model.eval()
-    print("==> Input transform to be applied to the neural network (trained):")
-    print(model.input_transform.cpu().detach().numpy())
-    print("==> Output transform to be applied to the neural network (trained):")
-    print(model.output_transform.cpu().detach().numpy())
-    if nn_config.layer == 'Sandwich':
-        global_lipschitz = nn_config.gamma
-        global_lipschitz *= max(model.input_transform.cpu().detach().numpy())
-        global_lipschitz *= max(model.output_transform.cpu().detach().numpy())
-    else:
-        global_lipschitz = 1.0
-        global_lipschitz *= max(model.input_transform.cpu().detach().numpy())
-        global_lipschitz *= max(model.output_transform.cpu().detach().numpy())
-        for layer in model.model:
-            if isinstance(layer, torch.nn.Linear):
-                global_lipschitz *= np.linalg.norm(layer.weight.cpu().detach().numpy(), 2)
-
-    print("==> Global Lipschitz constant: {:.02f}".format(global_lipschitz))
+    
+    dataset_folder = "{}/datasets/eg1_Linear/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
+    dataset_file = "{}/dataset.mat".format(dataset_folder)
+    dataset = DynDataset(dataset_file, config)
 
     x_data = []
     x_dot_data = []
@@ -106,7 +56,6 @@ def save_grid(dataset_num, grid_size):
     hull_points = x_data[hull.vertices]  # Vertices of the convex hull
 
     # Step 2: Define the grid size
-    grid_size = 0.1  # This is the size of each grid cell
     x_min, y_min = np.min(x_data, axis=0)
     x_max, y_max = np.max(x_data, axis=0)
 
@@ -144,18 +93,25 @@ def save_grid(dataset_num, grid_size):
     for cell in selected_cells:
         rect = plt.Polygon(cell, edgecolor='r', facecolor='none', linewidth=1)
         ax.add_patch(rect)
+        # print(polygon_area(cell))
 
     # Set labels and title
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_title('2D Points, Convex Hull, and Selected Meshes')
+    ax.set_xlabel('x1')
+    ax.set_ylabel('x2')
+    
+    # Set the aspect of the plot to be equal
+    ax.set_aspect('equal', adjustable='box')
 
     # Display the plot
     plt.legend()
-    plt.grid(True)
-    plt.show()
+    plt.savefig("{}/00_grid_size_{:.2f}.png".format(dataset_folder, grid_size))
+
+    # Save the selected cells to a pickle file
+    with open("{}/00_selected_cells_grid_size_{:.2f}.pkl".format(dataset_folder, grid_size), 'wb') as f:
+        pickle.dump(np.array(selected_cells), f)
 
 
 if __name__ == "__main__":
     dataset_num = 1
     grid_size = 0.1
+    get_grid(dataset_num, grid_size)

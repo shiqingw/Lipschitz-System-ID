@@ -8,21 +8,55 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 import matplotlib
 import matplotlib.pyplot as plt
-from scipy.spatial import ConvexHull
+import pickle
+from scipy.spatial import distance
 
 from cores.lip_nn.models import NeuralNetwork
-from cores.dynamical_systems.create_system import get_system
-from cores.utils.utils import seed_everything, get_nn_config, load_dict, load_nn_weights
+from cores.utils.utils import get_nn_config, load_nn_weights
 from cores.utils.config import Configuration
-from cores.dataloader.dataset_utils import DynDataset, get_test_and_training_data
+from cores.dataloader.dataset_utils import DynDataset
 
-def diagnosis(exp_num):
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--exp_num', default=exp_num, type=int, help='test case number')
-    parser.add_argument('--device', default="None", type=str, help='device number')
-    args = parser.parse_args()
+def find_points_in_or_near_cells_presorted(x, sorted_indices_x, sorted_x_in_x, sorted_indices_y, sorted_x_in_y, selected_cells):
+    points_in_cells_idx = []
+    closest_points_idx = []
+    
+    # Iterate over each cell
+    for cell in selected_cells:
+        # Extract the min and max x and y coordinates of the axis-aligned cell
+        min_x, max_x = np.min(cell[:, 0]), np.max(cell[:, 0])
+        min_y, max_y = np.min(cell[:, 1]), np.max(cell[:, 1])
+        
+        # Binary search to find the range of x coordinates in sorted_x within [min_x, max_x]
+        x_min_idx = np.searchsorted(sorted_x_in_x[:, 0], min_x, side='left')
+        x_max_idx = np.searchsorted(sorted_x_in_x[:, 0], max_x, side='right')
+        x_min_idx = np.clip(x_min_idx, 0, len(sorted_indices_x) - 1)
+        x_max_idx = np.clip(x_max_idx, 0, len(sorted_indices_x) - 1)
+        x_range_indices = sorted_indices_x[x_min_idx:x_max_idx]
 
-    exp_num = args.exp_num
+        # Binary search to find the range of y coordinates in sorted_y within [min_y, max_y]
+        y_min_idx = np.searchsorted(sorted_x_in_y[:, 1], min_y, side='left')
+        y_max_idx = np.searchsorted(sorted_x_in_y[:, 1], max_y, side='right')
+        y_min_idx = np.clip(y_min_idx, 0, len(sorted_indices_y) - 1)
+        y_max_idx = np.clip(y_max_idx, 0, len(sorted_indices_y) - 1)
+        y_range_indices = sorted_indices_y[y_min_idx:y_max_idx]
+
+        # Find the points that satisfy both x and y range conditions
+        valid_indices = np.intersect1d(x_range_indices, y_range_indices)
+
+        if len(valid_indices) > 0:
+            points_in_cells_idx.append(valid_indices)
+            closest_points_idx.append([])  # No need to find the closest point since points are inside
+        else:
+            # If no points are inside, find the closest point to the cell
+            cell_center = np.mean(cell, axis=0)  # Approximate the cell center as its mean
+            dists = distance.cdist([cell_center], x).flatten()  # Compute distances from the cell center to all points in x
+            closest_points_indices = np.argsort(dists)[:4]
+            points_in_cells_idx.append([])  # No points inside the cell
+            closest_points_idx.append([*closest_points_indices])  # Closest point to the cell
+    
+    return points_in_cells_idx, closest_points_idx
+
+def estimate_error(exp_num, system_lipschitz, dataset, selected_cells, x, sorted_indices_x, sorted_x_in_x, sorted_indices_y, sorted_x_in_y):
     print("==> Exp Num:", exp_num)
     results_dir = "{}/eg1_results/{:03d}".format(str(Path(__file__).parent.parent), exp_num)
     if not os.path.exists(results_dir):
@@ -33,27 +67,8 @@ def diagnosis(exp_num):
 
     # Decide torch device
     config = Configuration()
-    user_device = args.device
-    if user_device != "None":
-        config.device = torch.device(user_device)
     device = config.device
     print('==> torch device: ', device)
-
-    # Seed everything
-    seed = test_settings["seed"]
-    seed_everything(seed)
-
-    # Load dataset and get trainloader
-    train_config = test_settings["train_config"]
-    dataset_num = int(train_config["dataset"])
-    dataset_path = "eg1_Linear/{:03d}/dataset.mat".format(dataset_num)
-    dataset_path = "{}/datasets/{}".format(str(Path(__file__).parent.parent),dataset_path)
-    dataset = DynDataset(dataset_path, config)
-
-    train_ratio = train_config["train_ratio"]
-    further_train_ratio = train_config["further_train_ratio"]
-    _, test_dataset = get_test_and_training_data(dataset, train_ratio, 
-                        further_train_ratio, seed_train_test=None, seed_actual_train=None)
 
     # Build neural network
     nn_config = test_settings["nn_config"]
@@ -92,72 +107,56 @@ def diagnosis(exp_num):
 
     print("==> Global Lipschitz constant: {:.02f}".format(global_lipschitz))
 
-    x_data = []
-    x_dot_data = []
-    for i in range(len(dataset)):
-        t, x, u, x_dot = dataset[i]
-        x_data.append(x.cpu().detach().numpy())
-        x_dot_data.append(x_dot.cpu().detach().numpy())
-    x_data = np.array(x_data)
-    x_dot_data = np.array(x_dot_data)
+    x_torch = dataset.x
+    x_dot = dataset.x_dot.cpu().detach().numpy()
+    x_dot_pred = model(x_torch).cpu().detach().numpy()
+    pred_error = np.linalg.norm(x_dot_pred-x_dot, 2, axis=1)
+    error_per_cell = np.zeros(len(selected_cells))
+
+    points_in_cells_idx, closest_points_idx = find_points_in_or_near_cells_presorted(x, sorted_indices_x, sorted_x_in_x, sorted_indices_y, sorted_x_in_y, selected_cells)
+
+    for i in range(len(selected_cells)):
+        cell_coords = selected_cells[i]
+        points_in_cells_indices = points_in_cells_idx[i]
+        closest_points_indices = closest_points_idx[i]
+        errors = []
+        if len(points_in_cells_indices) > 0:
+            for idx in points_in_cells_indices:
+                dist = max(np.linalg.norm(cell_coords - x[idx], 2, axis=1))
+                error = pred_error[idx] + (system_lipschitz + global_lipschitz) * dist
+                errors.append(error)
+        else:
+            for idx in closest_points_indices:
+                dist = max(np.linalg.norm(cell_coords - x[idx], 2, axis=1))
+                error = pred_error[idx] + (system_lipschitz + global_lipschitz) * dist
+                errors.append(error)
+        error_per_cell[i] = min(errors)
     
-    # Step 1: Compute the convex hull of the points
-    hull = ConvexHull(x_data)
-    hull_points = x_data[hull.vertices]  # Vertices of the convex hull
-
-    # Step 2: Define the grid size
-    grid_size = 0.1  # This is the size of each grid cell
-    x_min, y_min = np.min(x_data, axis=0)
-    x_max, y_max = np.max(x_data, axis=0)
-
-    # Create the grid
-    x_bins = np.arange(x_min, x_max + grid_size, grid_size)
-    y_bins = np.arange(y_min, y_max + grid_size, grid_size)
-
-    # Step 3: Check if grid cells overlap with the convex hull
-    # Create a path object for the convex hull
-    hull_path = matplotlib.path.Path(hull_points)
-
-    # List to store the grid cells that overlap with the convex hull
-    selected_cells = []
-
-    for i in range(len(x_bins) - 1):
-        for j in range(len(y_bins) - 1):
-            # Define the corners of the grid cell
-            grid_cell = np.array([
-                [x_bins[i], y_bins[j]],
-                [x_bins[i+1], y_bins[j]],
-                [x_bins[i+1], y_bins[j+1]],
-                [x_bins[i], y_bins[j+1]]
-            ])
-            # Check if any corner of the grid cell is inside the convex hull
-            if hull_path.intersects_path(matplotlib.path.Path(grid_cell)):
-                selected_cells.append(grid_cell)
-
-    # Step 4: Visualize the points, the convex hull, and the selected grid cells
-    fig, ax = plt.subplots()
-
-    # Plot the 2D points
-    ax.scatter(x_data[:, 0], x_data[:, 1], color='blue', label='2D Points', s=1)
-
-    # Plot the grid cells that overlap with the convex hull
-    for cell in selected_cells:
-        rect = plt.Polygon(cell, edgecolor='r', facecolor='none', linewidth=1)
-        ax.add_patch(rect)
-
-    # Set labels and title
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_title('2D Points, Convex Hull, and Selected Meshes')
-
-    # Display the plot
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-
-
+    print("==> Max error: {:.02f}".format(max(error_per_cell)))
+                
 if __name__ == "__main__":
-    for exp_num in range(1, 2):
-        diagnosis(exp_num)
+    dataset_num = 1
+    grid_size = 0.1
+
+    dataset_folder = "{}/datasets/eg1_Linear/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
+    dataset_file = "{}/dataset.mat".format(dataset_folder)
+    config = Configuration()
+    dataset = DynDataset(dataset_file, config)
+    with open("{}/00_selected_cells_grid_size_{:.2f}.pkl".format(dataset_folder, grid_size), "rb") as f:
+        selected_cells = pickle.load(f)
+
+    x = dataset.x.cpu().detach().numpy()
+    
+    sorted_indices_x = np.argsort(x[:, 0])
+    sorted_x_in_x = x[sorted_indices_x]
+
+    sorted_indices_y = np.argsort(x[:, 1])
+    sorted_x_in_y = x[sorted_indices_y]
+
+    system_lipschitz = np.linalg.norm(np.array([[-0.1, 2.0], [-2.0, -0.1]]), 2)
+
+
+    for exp_num in range(16, 17):
+        estimate_error(exp_num, system_lipschitz, dataset, selected_cells, x, sorted_indices_x, sorted_x_in_x, sorted_indices_y, sorted_x_in_y)
 
             
