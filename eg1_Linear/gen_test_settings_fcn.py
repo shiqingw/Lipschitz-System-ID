@@ -41,7 +41,7 @@ def generate_json_script(filename, entry):
                 "batch_size": 256,
                 "num_epoch": 40,
                 "warmup_steps": 8,
-                "lr": 0.001,
+                "lr": 0.01,
                 "wd": entry["wd"],
                 "transform_wd": 0.0,
                 "transform_lr": 0.0,
@@ -55,7 +55,7 @@ train_ratios = [0.25, 0.5, 1.0]
 train_ratios.sort()
 wds = [1e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
 wds.sort()
-random_seeds = [100,200,300]
+random_seeds = [0,100,200,300]
 random_seeds.sort()
 
 # iterate over all combinations of gammas, train_ratios, and random_seeds and generate a test_settings file for each
@@ -69,7 +69,7 @@ for train_ratio in train_ratios:
                 "random_seed": random_seed
             })
 
-start = 121
+start = 265
 exp_nums = range(start, start+len(data))
 for i in range(len(data)):
     entry = data[i]
