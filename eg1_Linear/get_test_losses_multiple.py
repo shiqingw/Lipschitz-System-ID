@@ -66,24 +66,9 @@ def diagnosis(exp_num):
     if nn_config.layer == 'Sandwich':
         print("==> Lipschitz constant: {:.02f}".format(nn_config.gamma))
 
-    model = load_nn_weights(model, os.path.join(results_dir, 'nn_init.pt'), device)
-    model.eval()
-    print("==> Input transform to be applied to the neural network (init):")
-    print(model.input_transform.cpu().detach().numpy())
-    print("==> Output transform to be applied to the neural network (init):")
-    print(model.output_transform.cpu().detach().numpy())
-
     model = load_nn_weights(model, os.path.join(results_dir, 'nn_best.pt'), device)
     model.eval()
-    print("==> Input transform to be applied to the neural network (trained):")
-    print(model.input_transform.cpu().detach().numpy())
-    print("==> Output transform to be applied to the neural network (trained):")
-    print(model.output_transform.cpu().detach().numpy())
-    if nn_config.layer == 'Sandwich':
-        overall_lipschitz = nn_config.gamma*\
-                    max(model.input_transform.cpu().detach().numpy())*max(model.output_transform.cpu().detach().numpy())
-        print("==> Overall Lipschitz constant: {:.02f}".format(overall_lipschitz))
-        
+
     # Load loss dict and print the final loss
     loss_dict = load_dict(os.path.join(results_dir, "training_info.npy"))
     min_pos = np.argmin(loss_dict["test_loss"])
@@ -102,7 +87,7 @@ def diagnosis(exp_num):
 if __name__ == "__main__":
     # save to a txt file with separator that can be directly copy pasted to excel-
     with open("text.txt", "w") as file:
-        for exp_num in range(121, 265):
+        for exp_num in range(265, 361):
             out = diagnosis(exp_num)
             print("#############################################")
             for ii in out:
