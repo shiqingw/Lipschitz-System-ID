@@ -1,0 +1,1 @@
+python -u eg1_Linear/get_estimate_error.py > output.out
