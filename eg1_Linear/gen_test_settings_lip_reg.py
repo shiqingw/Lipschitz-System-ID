@@ -41,7 +41,7 @@ def generate_json_script(filename, entry):
                 "batch_size": 256,
                 "num_epoch": 40,
                 "warmup_steps": 8,
-                "lr": 0.01,
+                "lr": 0.001,
                 "wd": 0,
                 "transform_wd": 0.0,
                 "transform_lr": 0.0,
