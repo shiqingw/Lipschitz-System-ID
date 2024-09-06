@@ -53,7 +53,7 @@ def diagnosis(exp_num):
     nn_config = test_settings["nn_config"]
     input_bias = np.array(nn_config["input_bias"], dtype=config.np_dtype)
     input_transform = np.array(nn_config["input_transform_to_inverse"], dtype=config.np_dtype)
-    input_transform = 1.0/input_transform
+    input_transform = np.zeros_like(input_transform)
     output_transform = np.array(nn_config["output_transform"], dtype=config.np_dtype)
     train_transform = bool(nn_config["train_transform"])
     zero_at_zero = bool(nn_config["zero_at_zero"])
@@ -102,7 +102,7 @@ def diagnosis(exp_num):
 if __name__ == "__main__":
     # save to a txt file with separator that can be directly copy pasted to excel-
     with open("text.txt", "w") as file:
-        for exp_num in range(67, 121):
+        for exp_num in range(121, 265):
             out = diagnosis(exp_num)
             print("#############################################")
             for ii in out:

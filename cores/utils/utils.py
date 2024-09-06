@@ -31,7 +31,7 @@ def save_nn_weights(nn, full_path):
     torch.save(nn.state_dict(), full_path)
 
 def load_nn_weights(nn, full_path, device):
-    loaded_state_dict = torch.load(full_path, map_location=device)
+    loaded_state_dict = torch.load(full_path, map_location=device, weights_only=True)
     nn.load_state_dict(loaded_state_dict)
     nn.to(device)
     return nn

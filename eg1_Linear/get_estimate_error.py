@@ -156,7 +156,7 @@ if __name__ == "__main__":
     system_lipschitz = np.linalg.norm(np.array([[-0.1, 2.0], [-2.0, -0.1]]), 2)
 
 
-    for exp_num in range(16, 17):
+    for exp_num in range(122, 123):
         estimate_error(exp_num, system_lipschitz, dataset, selected_cells, x, sorted_indices_x, sorted_x_in_x, sorted_indices_y, sorted_x_in_y)
 
             
