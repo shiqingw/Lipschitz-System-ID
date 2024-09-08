@@ -1,99 +1,51 @@
-mkdir eg2_results/004
-python -u eg2_VanDerPol/train.py --exp_num 4 --device cuda:3 > eg2_results/004/output.out
-mkdir eg2_results/008
-python -u eg2_VanDerPol/train.py --exp_num 8 --device cuda:3 > eg2_results/008/output.out
-mkdir eg2_results/012
-python -u eg2_VanDerPol/train.py --exp_num 12 --device cuda:3 > eg2_results/012/output.out
-mkdir eg2_results/016
-python -u eg2_VanDerPol/train.py --exp_num 16 --device cuda:3 > eg2_results/016/output.out
-mkdir eg2_results/020
-python -u eg2_VanDerPol/train.py --exp_num 20 --device cuda:3 > eg2_results/020/output.out
-mkdir eg2_results/024
-python -u eg2_VanDerPol/train.py --exp_num 24 --device cuda:3 > eg2_results/024/output.out
-mkdir eg2_results/028
-python -u eg2_VanDerPol/train.py --exp_num 28 --device cuda:3 > eg2_results/028/output.out
-mkdir eg2_results/032
-python -u eg2_VanDerPol/train.py --exp_num 32 --device cuda:3 > eg2_results/032/output.out
-mkdir eg2_results/036
-python -u eg2_VanDerPol/train.py --exp_num 36 --device cuda:3 > eg2_results/036/output.out
-mkdir eg2_results/040
-python -u eg2_VanDerPol/train.py --exp_num 40 --device cuda:3 > eg2_results/040/output.out
-mkdir eg2_results/044
-python -u eg2_VanDerPol/train.py --exp_num 44 --device cuda:3 > eg2_results/044/output.out
-mkdir eg2_results/048
-python -u eg2_VanDerPol/train.py --exp_num 48 --device cuda:3 > eg2_results/048/output.out
-mkdir eg2_results/052
-python -u eg2_VanDerPol/train.py --exp_num 52 --device cuda:3 > eg2_results/052/output.out
-mkdir eg2_results/056
-python -u eg2_VanDerPol/train.py --exp_num 56 --device cuda:3 > eg2_results/056/output.out
-mkdir eg2_results/060
-python -u eg2_VanDerPol/train.py --exp_num 60 --device cuda:3 > eg2_results/060/output.out
-mkdir eg2_results/064
-python -u eg2_VanDerPol/train.py --exp_num 64 --device cuda:3 > eg2_results/064/output.out
-mkdir eg2_results/068
-python -u eg2_VanDerPol/train.py --exp_num 68 --device cuda:3 > eg2_results/068/output.out
-mkdir eg2_results/072
-python -u eg2_VanDerPol/train.py --exp_num 72 --device cuda:3 > eg2_results/072/output.out
-mkdir eg2_results/076
-python -u eg2_VanDerPol/train.py --exp_num 76 --device cuda:3 > eg2_results/076/output.out
-mkdir eg2_results/080
-python -u eg2_VanDerPol/train.py --exp_num 80 --device cuda:3 > eg2_results/080/output.out
-mkdir eg2_results/084
-python -u eg2_VanDerPol/train.py --exp_num 84 --device cuda:3 > eg2_results/084/output.out
-mkdir eg2_results/088
-python -u eg2_VanDerPol/train.py --exp_num 88 --device cuda:3 > eg2_results/088/output.out
-mkdir eg2_results/092
-python -u eg2_VanDerPol/train.py --exp_num 92 --device cuda:3 > eg2_results/092/output.out
-mkdir eg2_results/096
-python -u eg2_VanDerPol/train.py --exp_num 96 --device cuda:3 > eg2_results/096/output.out
-mkdir eg2_results/100
-python -u eg2_VanDerPol/train.py --exp_num 100 --device cuda:3 > eg2_results/100/output.out
-mkdir eg2_results/104
-python -u eg2_VanDerPol/train.py --exp_num 104 --device cuda:3 > eg2_results/104/output.out
-mkdir eg2_results/108
-python -u eg2_VanDerPol/train.py --exp_num 108 --device cuda:3 > eg2_results/108/output.out
-mkdir eg2_results/112
-python -u eg2_VanDerPol/train.py --exp_num 112 --device cuda:3 > eg2_results/112/output.out
-mkdir eg2_results/116
-python -u eg2_VanDerPol/train.py --exp_num 116 --device cuda:3 > eg2_results/116/output.out
-mkdir eg2_results/120
-python -u eg2_VanDerPol/train.py --exp_num 120 --device cuda:3 > eg2_results/120/output.out
-mkdir eg2_results/124
-python -u eg2_VanDerPol/train.py --exp_num 124 --device cuda:3 > eg2_results/124/output.out
-mkdir eg2_results/128
-python -u eg2_VanDerPol/train.py --exp_num 128 --device cuda:3 > eg2_results/128/output.out
-mkdir eg2_results/132
-python -u eg2_VanDerPol/train.py --exp_num 132 --device cuda:3 > eg2_results/132/output.out
-mkdir eg2_results/136
-python -u eg2_VanDerPol/train.py --exp_num 136 --device cuda:3 > eg2_results/136/output.out
-mkdir eg2_results/140
-python -u eg2_VanDerPol/train.py --exp_num 140 --device cuda:3 > eg2_results/140/output.out
-mkdir eg2_results/144
-python -u eg2_VanDerPol/train.py --exp_num 144 --device cuda:3 > eg2_results/144/output.out
-mkdir eg2_results/148
-python -u eg2_VanDerPol/train.py --exp_num 148 --device cuda:3 > eg2_results/148/output.out
-mkdir eg2_results/152
-python -u eg2_VanDerPol/train.py --exp_num 152 --device cuda:3 > eg2_results/152/output.out
-mkdir eg2_results/156
-python -u eg2_VanDerPol/train.py --exp_num 156 --device cuda:3 > eg2_results/156/output.out
-mkdir eg2_results/160
-python -u eg2_VanDerPol/train.py --exp_num 160 --device cuda:3 > eg2_results/160/output.out
-mkdir eg2_results/164
-python -u eg2_VanDerPol/train.py --exp_num 164 --device cuda:3 > eg2_results/164/output.out
-mkdir eg2_results/168
-python -u eg2_VanDerPol/train.py --exp_num 168 --device cuda:3 > eg2_results/168/output.out
-mkdir eg2_results/172
-python -u eg2_VanDerPol/train.py --exp_num 172 --device cuda:3 > eg2_results/172/output.out
-mkdir eg2_results/176
-python -u eg2_VanDerPol/train.py --exp_num 176 --device cuda:3 > eg2_results/176/output.out
-mkdir eg2_results/180
-python -u eg2_VanDerPol/train.py --exp_num 180 --device cuda:3 > eg2_results/180/output.out
-mkdir eg2_results/184
-python -u eg2_VanDerPol/train.py --exp_num 184 --device cuda:3 > eg2_results/184/output.out
-mkdir eg2_results/188
-python -u eg2_VanDerPol/train.py --exp_num 188 --device cuda:3 > eg2_results/188/output.out
-mkdir eg2_results/192
-python -u eg2_VanDerPol/train.py --exp_num 192 --device cuda:3 > eg2_results/192/output.out
+mkdir eg1_results/268
+python -u eg1_Linear/train.py --exp_num 268 --device cuda:3 > eg1_results/268/output.out
+mkdir eg1_results/272
+python -u eg1_Linear/train.py --exp_num 272 --device cuda:3 > eg1_results/272/output.out
+mkdir eg1_results/276
+python -u eg1_Linear/train.py --exp_num 276 --device cuda:3 > eg1_results/276/output.out
+mkdir eg1_results/280
+python -u eg1_Linear/train.py --exp_num 280 --device cuda:3 > eg1_results/280/output.out
+mkdir eg1_results/284
+python -u eg1_Linear/train.py --exp_num 284 --device cuda:3 > eg1_results/284/output.out
+mkdir eg1_results/288
+python -u eg1_Linear/train.py --exp_num 288 --device cuda:3 > eg1_results/288/output.out
+mkdir eg1_results/292
+python -u eg1_Linear/train.py --exp_num 292 --device cuda:3 > eg1_results/292/output.out
+mkdir eg1_results/296
+python -u eg1_Linear/train.py --exp_num 296 --device cuda:3 > eg1_results/296/output.out
+mkdir eg1_results/300
+python -u eg1_Linear/train.py --exp_num 300 --device cuda:3 > eg1_results/300/output.out
+mkdir eg1_results/304
+python -u eg1_Linear/train.py --exp_num 304 --device cuda:3 > eg1_results/304/output.out
+mkdir eg1_results/308
+python -u eg1_Linear/train.py --exp_num 308 --device cuda:3 > eg1_results/308/output.out
+mkdir eg1_results/312
+python -u eg1_Linear/train.py --exp_num 312 --device cuda:3 > eg1_results/312/output.out
+mkdir eg1_results/316
+python -u eg1_Linear/train.py --exp_num 316 --device cuda:3 > eg1_results/316/output.out
+mkdir eg1_results/320
+python -u eg1_Linear/train.py --exp_num 320 --device cuda:3 > eg1_results/320/output.out
+mkdir eg1_results/324
+python -u eg1_Linear/train.py --exp_num 324 --device cuda:3 > eg1_results/324/output.out
+mkdir eg1_results/328
+python -u eg1_Linear/train.py --exp_num 328 --device cuda:3 > eg1_results/328/output.out
+mkdir eg1_results/332
+python -u eg1_Linear/train.py --exp_num 332 --device cuda:3 > eg1_results/332/output.out
+mkdir eg1_results/336
+python -u eg1_Linear/train.py --exp_num 336 --device cuda:3 > eg1_results/336/output.out
+mkdir eg1_results/340
+python -u eg1_Linear/train.py --exp_num 340 --device cuda:3 > eg1_results/340/output.out
+mkdir eg1_results/344
+python -u eg1_Linear/train.py --exp_num 344 --device cuda:3 > eg1_results/344/output.out
+mkdir eg1_results/348
+python -u eg1_Linear/train.py --exp_num 348 --device cuda:3 > eg1_results/348/output.out
+mkdir eg1_results/352
+python -u eg1_Linear/train.py --exp_num 352 --device cuda:3 > eg1_results/352/output.out
+mkdir eg1_results/356
+python -u eg1_Linear/train.py --exp_num 356 --device cuda:3 > eg1_results/356/output.out
+mkdir eg1_results/360
+python -u eg1_Linear/train.py --exp_num 360 --device cuda:3 > eg1_results/360/output.out
 mkdir eg2_results/196
 python -u eg2_VanDerPol/train.py --exp_num 196 --device cuda:3 > eg2_results/196/output.out
 mkdir eg2_results/200

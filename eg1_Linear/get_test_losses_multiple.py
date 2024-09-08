@@ -76,6 +76,11 @@ def diagnosis(exp_num):
     print("==> Training loss: ", loss_dict["train_loss"][min_pos])
     print("==> Testing loss: ", loss_dict["test_loss"][min_pos])
 
+    if nn_config.layer == 'Sandwich':
+        overall_lipschitz = nn_config.gamma
+        overall_lipschitz *= max(model.input_transform.cpu().detach().numpy())
+        overall_lipschitz *= max(model.output_transform.cpu().detach().numpy())
+
     train_config = test_settings["train_config"]
     if nn_config.layer == 'Sandwich':
         return nn_config.gamma, overall_lipschitz, loss_dict["train_loss"][min_pos], loss_dict["test_loss"][min_pos], exp_num, further_train_ratio
