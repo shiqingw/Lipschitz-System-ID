@@ -41,7 +41,7 @@ def generate_json_script(filename, entry):
                 "batch_size": 256,
                 "num_epoch": 40,
                 "warmup_steps": 8,
-                "lr": 0.01,
+                "lr": 0.001,
                 "wd": entry["wd"],
                 "transform_wd": 0.0,
                 "transform_lr": 0.0,
@@ -69,7 +69,7 @@ for train_ratio in train_ratios:
                 "random_seed": random_seed
             })
 
-start = 97
+start = 289
 exp_nums = range(start, start+len(data))
 for i in range(len(data)):
     entry = data[i]
