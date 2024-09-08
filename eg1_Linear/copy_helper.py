@@ -8,15 +8,15 @@ xls = pd.ExcelFile(excel_file)
 print(xls.sheet_names)
 
 # Load the Excel file
-df = pd.read_excel('/Users/shiqing/Desktop/Lipschitz-System-ID/eg1.xlsx', sheet_name='Ours 0.25')
+df = pd.read_excel(excel_file, sheet_name='Ours 0.25')
 column_data = df['Exp Num'].tolist()
 print(column_data)
 
-df = pd.read_excel('/Users/shiqing/Desktop/Lipschitz-System-ID/eg1.xlsx', sheet_name='Ours 0.5')
+df = pd.read_excel(excel_file, sheet_name='Ours 0.5')
 column_data = df['Exp Num'].tolist()
 print(column_data)
 
-df = pd.read_excel('/Users/shiqing/Desktop/Lipschitz-System-ID/eg1.xlsx', sheet_name='Ours 1.0')
+df = pd.read_excel(excel_file, sheet_name='Ours 1.0')
 column_data = df['Exp Num'].tolist()
 print(column_data)
 
