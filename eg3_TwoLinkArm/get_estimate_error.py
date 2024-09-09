@@ -12,6 +12,7 @@ import pickle
 from scipy.spatial import distance
 
 from cores.lip_nn.models import NeuralNetwork
+from cores.dynamical_systems.create_system import get_system
 from cores.utils.utils import get_nn_config, load_nn_weights
 from cores.utils.config import Configuration
 from cores.dataloader.dataset_utils import DynDataset
@@ -58,9 +59,9 @@ def find_points_in_or_near_cells_presorted(x, sorted_indices_x, sorted_x_in_x, s
 
 def estimate_error(exp_num, system_lipschitz, dataset, selected_cells, x, sorted_indices_x, sorted_x_in_x, sorted_indices_y, sorted_x_in_y, grid_size):
     print("==> Exp Num:", exp_num)
-    results_dir = "{}/eg2_results/{:03d}".format(str(Path(__file__).parent.parent), exp_num)
+    results_dir = "{}/eg3_results/{:03d}".format(str(Path(__file__).parent.parent), exp_num)
     if not os.path.exists(results_dir):
-        results_dir = "{}/eg2_results/{:03d}_keep".format(str(Path(__file__).parent.parent), exp_num)
+        results_dir = "{}/eg3_results/{:03d}_keep".format(str(Path(__file__).parent.parent), exp_num)
     test_settings_path = os.path.join(results_dir, "test_settings_{:03d}.json".format(exp_num))
     with open(test_settings_path, "r", encoding="utf8") as f:
         test_settings = json.load(f)
@@ -88,9 +89,14 @@ def estimate_error(exp_num, system_lipschitz, dataset, selected_cells, x, sorted
     model = load_nn_weights(model, os.path.join(results_dir, 'nn_best.pt'), device)
     model.eval()
 
+    # Build dynamical system
+    system_name = test_settings["nominal_system_name"]
+    nominal_system = get_system(system_name).to(device)
+
     x_torch = dataset.x
+    u_torch = dataset.u
     x_dot = dataset.x_dot.cpu().detach().numpy()
-    x_dot_pred = model(x_torch).cpu().detach().numpy()
+    x_dot_pred = model(x_torch).cpu().detach().numpy() + nominal_system(x_torch, u_torch).cpu().detach().numpy()
     pred_error = np.linalg.norm(x_dot_pred-x_dot, 2, axis=1)
     global_lipschitz_error_per_cell = np.zeros(len(selected_cells))
     lipsdp_lipschitz_error_per_cell = np.zeros(len(selected_cells))
@@ -161,10 +167,10 @@ if __name__ == "__main__":
     exp_nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] + \
                 [33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64] + \
                 [65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96] + \
-                [353, 354, 355, 356, 277, 278, 279, 280, 165, 166, 167, 168] 
+                [161, 162, 163, 164, 261, 262, 263, 264] 
 
     for grid_size in grid_sizes:
-        dataset_folder = "{}/datasets/eg2_VanDerPol/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
+        dataset_folder = "{}/datasets/eg3_TwoLinkArm/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
         dataset_file = "{}/dataset.mat".format(dataset_folder)
         config = Configuration()
         dataset = DynDataset(dataset_file, config)
@@ -179,7 +185,7 @@ if __name__ == "__main__":
         sorted_indices_y = np.argsort(x[:, 1])
         sorted_x_in_y = x[sorted_indices_y]
 
-        system_lipschitz = 6.51
+        system_lipschitz = 0.29
 
         for exp_num in exp_nums:
             time_start = time.time()
