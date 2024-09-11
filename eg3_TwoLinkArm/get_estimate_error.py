@@ -9,55 +9,24 @@ sys.path.append(str(Path(__file__).parent.parent))
 import matplotlib
 import matplotlib.pyplot as plt
 import pickle
-from scipy.spatial import distance
+from scipy.spatial import KDTree
 
 from cores.lip_nn.models import NeuralNetwork
 from cores.dynamical_systems.create_system import get_system
-from cores.utils.utils import get_nn_config, load_nn_weights
+from cores.utils.utils import get_nn_config, load_nn_weights, format_time
 from cores.utils.config import Configuration
 from cores.dataloader.dataset_utils import DynDataset
 
-def find_points_in_or_near_cells_presorted(x, sorted_indices_x, sorted_x_in_x, sorted_indices_y, sorted_x_in_y, selected_cells):
-    points_in_cells_idx = []
-    closest_points_idx = []
+def find_points_in_or_near_cell(cell, kd_tree, grid_size):
+    cell_center = np.mean(cell, axis=0)
+    indices_point_in_cell = kd_tree.query_ball_point(cell_center, grid_size/2, p=np.inf)
+    if len(indices_point_in_cell) > 0:
+        indices_point_to_cell = []
+    else:
+        _, indices_point_to_cell = kd_tree.query(cell_center, k = 10, p=2)
+    return indices_point_in_cell, indices_point_to_cell
     
-    # Iterate over each cell
-    for cell in selected_cells:
-        # Extract the min and max x and y coordinates of the axis-aligned cell
-        min_x, max_x = np.min(cell[:, 0]), np.max(cell[:, 0])
-        min_y, max_y = np.min(cell[:, 1]), np.max(cell[:, 1])
-        
-        # Binary search to find the range of x coordinates in sorted_x within [min_x, max_x]
-        x_min_idx = np.searchsorted(sorted_x_in_x[:, 0], min_x, side='left')
-        x_max_idx = np.searchsorted(sorted_x_in_x[:, 0], max_x, side='right')
-        x_min_idx = np.clip(x_min_idx, 0, len(sorted_indices_x) - 1)
-        x_max_idx = np.clip(x_max_idx, 0, len(sorted_indices_x) - 1)
-        x_range_indices = sorted_indices_x[x_min_idx:x_max_idx]
-
-        # Binary search to find the range of y coordinates in sorted_y within [min_y, max_y]
-        y_min_idx = np.searchsorted(sorted_x_in_y[:, 1], min_y, side='left')
-        y_max_idx = np.searchsorted(sorted_x_in_y[:, 1], max_y, side='right')
-        y_min_idx = np.clip(y_min_idx, 0, len(sorted_indices_y) - 1)
-        y_max_idx = np.clip(y_max_idx, 0, len(sorted_indices_y) - 1)
-        y_range_indices = sorted_indices_y[y_min_idx:y_max_idx]
-
-        # Find the points that satisfy both x and y range conditions
-        valid_indices = np.intersect1d(x_range_indices, y_range_indices)
-
-        if len(valid_indices) > 0:
-            points_in_cells_idx.append(valid_indices)
-            closest_points_idx.append([])  # No need to find the closest point since points are inside
-        else:
-            # If no points are inside, find the closest point to the cell
-            cell_center = np.mean(cell, axis=0)  # Approximate the cell center as its mean
-            dists = distance.cdist([cell_center], x).flatten()  # Compute distances from the cell center to all points in x
-            closest_points_indices = np.argsort(dists)[:4]
-            points_in_cells_idx.append([])  # No points inside the cell
-            closest_points_idx.append([*closest_points_indices])  # Closest point to the cell
-    
-    return points_in_cells_idx, closest_points_idx
-
-def estimate_error(exp_num, system_lipschitz, dataset, x, sorted_indices_x, sorted_x_in_x, sorted_indices_y, sorted_x_in_y, grid_size):
+def estimate_error(exp_num, system_lipschitz, dataset, x, grid_size):
     print("==> Exp Num:", exp_num)
     results_dir = "{}/eg3_results/{:03d}".format(str(Path(__file__).parent.parent), exp_num)
     if not os.path.exists(results_dir):
@@ -120,11 +89,9 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, sorted_indices_x, sort
                 break
             with open(file_path, 'rb') as f:
                 selected_cells = pickle.load(f)
-            points_in_cells_idx, closest_points_idx = find_points_in_or_near_cells_presorted(x, sorted_indices_x, sorted_x_in_x, sorted_indices_y, sorted_x_in_y, selected_cells)
             for i in range(len(selected_cells)):
                 cell_coords = selected_cells[i]
-                points_in_cells_indices = points_in_cells_idx[i]
-                closest_points_indices = closest_points_idx[i]
+                points_in_cells_indices, closest_points_indices = find_points_in_or_near_cell(cell_coords, kd_tree, grid_size)
                 errors = []
                 if len(points_in_cells_indices) > 0:
                     for idx in points_in_cells_indices:
@@ -140,8 +107,10 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, sorted_indices_x, sort
             print("Treated {} files. global_lipschitz_error so far: {:.03f}. Time per file {:.02f} seconds.".format(file_counter,
                      global_lipschitz_error, (time.time() - time_start)/file_counter))
             file_counter += 1
+        time_end = time.time()
         print("==> Max error using global_lipschitz: {:.02f}".format(global_lipschitz_error))
         data["global_lipschitz_error"] = global_lipschitz_error
+        data["global_lipschitz_estimation_time"] = time_end - time_start
 
     # lipsdp lipschitz error
     lipsdp_lipschitz_file  = "{}/lipsdp_lipschitz.pkl".format(results_dir)
@@ -161,11 +130,9 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, sorted_indices_x, sort
                 break
             with open(file_path, 'rb') as f:
                 selected_cells = pickle.load(f)
-            points_in_cells_idx, closest_points_idx = find_points_in_or_near_cells_presorted(x, sorted_indices_x, sorted_x_in_x, sorted_indices_y, sorted_x_in_y, selected_cells)
             for i in range(len(selected_cells)):
                 cell_coords = selected_cells[i]
-                points_in_cells_indices = points_in_cells_idx[i]
-                closest_points_indices = closest_points_idx[i]
+                points_in_cells_indices, closest_points_indices = find_points_in_or_near_cell(cell_coords, kd_tree, grid_size)
                 errors = []
                 if len(points_in_cells_indices) > 0:
                     for idx in points_in_cells_indices:
@@ -181,8 +148,10 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, sorted_indices_x, sort
             print("Treated {} files. lipsdp_lipschitz_error so far: {:.03f}. Time per file {:.02f} seconds.".format(file_counter, \
                             lipsdp_lipschitz_error, (time.time() - time_start)/file_counter))
             file_counter += 1
+        time_end = time.time()
         print("==> Max error using lipsdp_lipschitz: {:.02f}".format(lipsdp_lipschitz_error))
         data["lipsdp_lipschitz_error"] = lipsdp_lipschitz_error
+        data["lipsdp_lipschitz_estimation_time"] = time_end - time_start
     
     with open("{}/estimate_error_grid_size_{:.2f}.pkl".format(results_dir, grid_size), "wb") as f:
         pickle.dump(data, f)
@@ -190,29 +159,24 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, sorted_indices_x, sort
 if __name__ == "__main__":
     dataset_num = 1
     grid_sizes = [0.5, 0.25, 0.1]
-    exp_nums = [81, 82, 83, 84, 161, 162, 163, 164, 261, 262, 263, 264] 
+    exp_nums = [77, 78, 79, 80, 81, 82, 83, 84, 161, 162, 163, 164, 261, 262, 263, 264] 
+    dataset_folder = "{}/datasets/eg3_TwoLinkArm/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
+    dataset_file = "{}/dataset.mat".format(dataset_folder)
+    config = Configuration()
+    dataset = DynDataset(dataset_file, config)
+
+    x = dataset.x.cpu().detach().numpy()
+    kd_tree = KDTree(x)
+
+    system_lipschitz = 0.29
 
     for grid_size in grid_sizes:
-        dataset_folder = "{}/datasets/eg3_TwoLinkArm/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
-        dataset_file = "{}/dataset.mat".format(dataset_folder)
-        config = Configuration()
-        dataset = DynDataset(dataset_file, config)
-
-        x = dataset.x.cpu().detach().numpy()
-        
-        sorted_indices_x = np.argsort(x[:, 0])
-        sorted_x_in_x = x[sorted_indices_x]
-
-        sorted_indices_y = np.argsort(x[:, 1])
-        sorted_x_in_y = x[sorted_indices_y]
-
-        system_lipschitz = 0.29
 
         for exp_num in exp_nums:
             time_start = time.time()
-            estimate_error(exp_num, system_lipschitz, dataset, x, sorted_indices_x, sorted_x_in_x, sorted_indices_y, sorted_x_in_y, grid_size)
+            estimate_error(exp_num, system_lipschitz, dataset, x, grid_size)
             time_end = time.time()
-            print("==> Time taken: {:.02f} seconds".format(time_end - time_start))
+            print("==> Time taken: {}".format(format_time(time_end - time_start)))
             print("##############################################")
 
             
