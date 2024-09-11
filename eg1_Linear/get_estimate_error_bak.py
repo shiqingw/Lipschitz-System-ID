@@ -26,7 +26,7 @@ def find_points_in_or_near_cell(cell, kd_tree, grid_size):
         _, indices_point_to_cell = kd_tree.query(cell_center, k = 10, p=2)
     return indices_point_in_cell, indices_point_to_cell
 
-def estimate_error(exp_num, system_lipschitz, dataset, x, kd_tree, dataset_folder, grid_size):
+def estimate_error(exp_num, system_lipschitz, dataset, x, selected_cells, grid_size):
     print("==> Exp Num:", exp_num)
     results_dir = "{}/eg1_results/{:03d}".format(str(Path(__file__).parent.parent), exp_num)
     if not os.path.exists(results_dir):
@@ -65,103 +65,78 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, kd_tree, dataset_folde
     selected_indices = [0,1]
     x_torch = dataset.x
     u_torch = dataset.u
-    x_dot = dataset.x_dot[:,selected_indices].cpu().detach().numpy()
-    x_dot_pred = model(x_torch).cpu().detach().numpy() + nominal_system(x_torch, u_torch)[:,selected_indices].cpu().detach().numpy()
+    x_dot = dataset.x_dot.cpu().detach().numpy()[:,selected_indices]
+    x_dot_pred = model(x_torch).cpu().detach().numpy() + nominal_system(x_torch, u_torch).cpu().detach().numpy()[:,selected_indices]
     pred_error = np.linalg.norm(x_dot_pred-x_dot, 2, axis=1)
 
     data = {}
-
-    # global lipschitz error
     global_lipschitz_file  = "{}/global_lipschitz.pkl".format(results_dir)
     # check if the file exists
     if os.path.exists(global_lipschitz_file):
-        print("==> Global lipschitz file exists")
-        # load the global lipschitz constant
         with open(global_lipschitz_file, "rb") as f:
             global_lipschitz_data = pickle.load(f)
         global_lipschitz = global_lipschitz_data["global_lipschitz"]
-        global_lipschitz_error = 0.0
-        file_counter = 1
+        global_lipschitz_error = 0
         time_start = time.time()
-        while True:
-            file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}_new.pkl".format(dataset_folder, grid_size, file_counter)
-            if not os.path.exists(file_path):
-                break
-            with open(file_path, 'rb') as f:
-                selected_cells = pickle.load(f)
-            for i in range(len(selected_cells)):
-                cell_coords = selected_cells[i]
-                points_in_cells_indices, closest_points_indices = find_points_in_or_near_cell(cell_coords, kd_tree, grid_size)
-                errors = []
-                if len(points_in_cells_indices) > 0:
-                    for idx in points_in_cells_indices:
-                        dist = max(np.linalg.norm(cell_coords - x[idx], 2, axis=1))
-                        error = pred_error[idx] + (system_lipschitz + global_lipschitz) * dist
-                        errors.append(error)
-                else:
-                    for idx in closest_points_indices:
-                        dist = max(np.linalg.norm(cell_coords - x[idx], 2, axis=1))
-                        error = pred_error[idx] + (system_lipschitz + global_lipschitz) * dist
-                        errors.append(error)
-                global_lipschitz_error = max(global_lipschitz_error, min(errors))
-            print("Treated {} files. global_lipschitz_error so far: {:.03f}. Time per file {:.02f} seconds.".format(file_counter,
-                     global_lipschitz_error, (time.time() - time_start)/file_counter))
-            file_counter += 1
+        for i in range(len(selected_cells)):
+            cell_coords = selected_cells[i]
+            points_in_cells_indices, closest_points_indices = find_points_in_or_near_cell(cell_coords, kd_tree, grid_size)
+            errors = []
+            if len(points_in_cells_indices) > 0:
+                for idx in points_in_cells_indices:
+                    dist = max(np.linalg.norm(cell_coords - x[idx], 2, axis=1))
+                    error = pred_error[idx] + (system_lipschitz + global_lipschitz) * dist
+                    errors.append(error)
+            else:
+                for idx in closest_points_indices:
+                    dist = max(np.linalg.norm(cell_coords - x[idx], 2, axis=1))
+                    error = pred_error[idx] + (system_lipschitz + global_lipschitz) * dist
+                    errors.append(error)
+            global_lipschitz_error = max(global_lipschitz_error, min(errors))
         time_end = time.time()
         print("==> Max error using global_lipschitz: {:.02f}".format(global_lipschitz_error))
         data["global_lipschitz_error"] = global_lipschitz_error
         data["global_lipschitz_estimation_time"] = time_end - time_start
-
-    # lipsdp lipschitz error
+    
     lipsdp_lipschitz_file  = "{}/lipsdp_lipschitz.pkl".format(results_dir)
     # check if the file exists
     if os.path.exists(lipsdp_lipschitz_file):
-        print("==> Lipsdp lipschitz file exists")
-        # load the global lipschitz constant
         with open(lipsdp_lipschitz_file, "rb") as f:
             lipsdp_lipschitz_data = pickle.load(f)
         lipsdp_lipschitz = lipsdp_lipschitz_data["lipsdp_lipschitz"]
-        lipsdp_lipschitz_error = 0.0
-        file_counter = 1
+        lipsdp_lipschitz_error = 0
         time_start = time.time()
-        while True:
-            file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}_new.pkl".format(dataset_folder, grid_size, file_counter)
-            if not os.path.exists(file_path):
-                break
-            with open(file_path, 'rb') as f:
-                selected_cells = pickle.load(f)
-            for i in range(len(selected_cells)):
-                cell_coords = selected_cells[i]
-                points_in_cells_indices, closest_points_indices = find_points_in_or_near_cell(cell_coords, kd_tree, grid_size)
-                errors = []
-                if len(points_in_cells_indices) > 0:
-                    for idx in points_in_cells_indices:
-                        dist = max(np.linalg.norm(cell_coords - x[idx], 2, axis=1))
-                        error = pred_error[idx] + (system_lipschitz + lipsdp_lipschitz) * dist
-                        errors.append(error)
-                else:
-                    for idx in closest_points_indices:
-                        dist = max(np.linalg.norm(cell_coords - x[idx], 2, axis=1))
-                        error = pred_error[idx] + (system_lipschitz + lipsdp_lipschitz) * dist
-                        errors.append(error)
-                lipsdp_lipschitz_error = max(lipsdp_lipschitz_error, min(errors))
-            print("Treated {} files. lipsdp_lipschitz_error so far: {:.03f}. Time per file {:.02f} seconds.".format(file_counter, \
-                            lipsdp_lipschitz_error, (time.time() - time_start)/file_counter))
-            file_counter += 1
+        for i in range(len(selected_cells)):
+            cell_coords = selected_cells[i]
+            points_in_cells_indices, closest_points_indices = find_points_in_or_near_cell(cell_coords, kd_tree, grid_size)
+            errors = []
+            if len(points_in_cells_indices) > 0:
+                for idx in points_in_cells_indices:
+                    dist = max(np.linalg.norm(cell_coords - x[idx], 2, axis=1))
+                    error = pred_error[idx] + (system_lipschitz + lipsdp_lipschitz) * dist
+                    errors.append(error)
+            else:
+                for idx in closest_points_indices:
+                    dist = max(np.linalg.norm(cell_coords - x[idx], 2, axis=1))
+                    error = pred_error[idx] + (system_lipschitz + lipsdp_lipschitz) * dist
+                    errors.append(error)
+            lipsdp_lipschitz_error = max(lipsdp_lipschitz_error, min(errors))
         time_end = time.time()
         print("==> Max error using lipsdp_lipschitz: {:.02f}".format(lipsdp_lipschitz_error))
         data["lipsdp_lipschitz_error"] = lipsdp_lipschitz_error
         data["lipsdp_lipschitz_estimation_time"] = time_end - time_start
     
-    with open("{}/estimate_error_grid_size_{:.2f}_new.pkl".format(results_dir, grid_size), "wb") as f:
+    with open("{}/estimate_error_grid_size_{:.2f}.pkl".format(results_dir, grid_size), "wb") as f:
         pickle.dump(data, f)
                 
 if __name__ == "__main__":
     dataset_num = 1
     grid_sizes = [0.5, 0.25, 0.1]
-    exp_nums = [15, 109, 110, 111] + \
-                [36, 172, 173, 174] + \
-                [65, 259, 260, 261]
+    exp_nums = [1, 67, 68, 69, 2, 70, 71, 72, 3, 73, 74, 75, 4, 76, 77, 78, 5, 79, 80, 81, 6, 82, 83, 84] + \
+                [7, 85, 86, 87, 8, 88, 89, 90, 9, 91, 92, 93, 10, 94, 95, 96, 11, 97, 98, 99, 12, 100, 101, 102] + \
+                [13, 103, 104, 105, 14, 106, 107, 108, 15, 109, 110, 111, 16, 112, 113, 114, 17, 115, 116, 117, 18, 118, 119, 120] + \
+                [19, 121, 122, 123, 29, 151, 152, 153, 36, 172, 173, 174] + \
+                [49, 211, 212, 213, 57, 235, 236, 237, 65, 259, 260, 261]
     
     dataset_folder = "{}/datasets/eg1_Linear/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
     dataset_file = "{}/dataset.mat".format(dataset_folder)
@@ -173,10 +148,12 @@ if __name__ == "__main__":
     system_lipschitz = np.linalg.norm(np.array([[-0.1, 2.0], [-2.0, -0.1]]), 2)
 
     for grid_size in grid_sizes:
+        with open("{}/00_selected_cells_grid_size_{:.2f}.pkl".format(dataset_folder, grid_size), "rb") as f:
+            selected_cells = pickle.load(f)
 
         for exp_num in exp_nums:
             time_start = time.time()
-            estimate_error(exp_num, system_lipschitz, dataset, x, kd_tree, dataset_folder, grid_size)
+            estimate_error(exp_num, system_lipschitz, dataset, x, selected_cells, grid_size)
             time_end = time.time()
             print("==> Time taken: {}".format(format_time(time_end - time_start)))
             print("##############################################")

@@ -86,6 +86,25 @@ def collect_info(exp_num, grid_sizes):
         else:
             all_info.append(None)
             all_info.append(None)
+
+    # Step 8: Time for computing
+    for grid_size in grid_sizes:
+        estimation_error_file = os.path.join(results_dir, "estimate_error_grid_size_{:.2f}.pkl".format(grid_size))
+        if os.path.exists(estimation_error_file):
+            with open(estimation_error_file, "rb") as f:
+                estimation_error_data = pickle.load(f)
+                # check if has the key
+                if "global_lipschitz_estimation_time" in estimation_error_data:
+                    all_info.append(estimation_error_data["global_lipschitz_estimation_time"])
+                else:
+                    all_info.append(None)
+                if "lipsdp_lipschitz_estimation_time" in estimation_error_data:
+                    all_info.append(estimation_error_data["lipsdp_lipschitz_estimation_time"])
+                else:    
+                    all_info.append(None)
+        else:
+            all_info.append(None)
+            all_info.append(None)
     
     return all_info
 
