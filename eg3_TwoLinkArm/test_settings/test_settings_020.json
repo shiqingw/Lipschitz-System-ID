@@ -1,0 +1,47 @@
+{
+    "nominal_system_name": "TwoLinkArm1_nominal",
+    "true_system_name": "TwoLinkArm1_true",
+    "seed": 300,
+    "nn_config": {
+        "in_features": 4,
+        "out_features": 2,
+        "Lipschitz_constant": 16,
+        "layer": "Sandwich",
+        "activations": "relu",
+        "num_layers": 8,
+        "width_each_layer": 64,
+        "input_bias": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "input_transform_to_inverse": [
+            1.4116,
+            1.3826,
+            1.4774,
+            1.4832
+        ],
+        "output_transform": [
+            0.2262,
+            0.2874
+        ],
+        "train_transform": 0,
+        "zero_at_zero": 1
+    },
+    "train_config": {
+        "dataset": "1",
+        "train_ratio": 0.8,
+        "further_train_ratio": 1.0,
+        "seed_train_test": "None",
+        "seed_actual_train": "None",
+        "batch_size": 256,
+        "num_epoch": 40,
+        "warmup_steps": 8,
+        "lr": 0.001,
+        "wd": 0,
+        "transform_wd": 0.0,
+        "transform_lr": 0.0,
+        "lip_reg_param": 0.0
+    }
+}

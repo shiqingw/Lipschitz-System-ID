@@ -24,20 +24,20 @@ def generate_json_script(filename, entry):
                     0.0
                 ],
                 "input_transform_to_inverse": [
-                    1.4139, 
-                    1.3848, 
-                    1.4792, 
-                    1.4848
+                    1.4116, 
+                    1.3826, 
+                    1.4774, 
+                    1.4832
                 ],
                 "output_transform": [
-                    0.2287,
-                    0.2871
+                    0.2262, 
+                    0.2874
                 ],
                 "train_transform": 0,
                 "zero_at_zero": 1
             },
             "train_config": {
-                "dataset": "2",
+                "dataset": "1",
                 "train_ratio": 0.8,
                 "further_train_ratio": entry["train_ratio"],
                 "seed_train_test": "None",
@@ -45,7 +45,7 @@ def generate_json_script(filename, entry):
                 "batch_size": 256,
                 "num_epoch": 40,
                 "warmup_steps": 8,
-                "lr": 0.01,
+                "lr": 0.001,
                 "wd": entry["wd"],
                 "transform_wd": 0.0,
                 "transform_lr": 0.0,
@@ -55,7 +55,9 @@ def generate_json_script(filename, entry):
     with open(filename, 'w') as file:
         json.dump(data, file, indent=4)
 
-train_ratios = [0.25, 0.5, 1.0]
+# train_ratios = [0.25, 0.5, 1.0]
+train_ratios = [1.0]
+
 train_ratios.sort()
 wds = [1e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
 wds.sort()
@@ -73,7 +75,7 @@ for train_ratio in train_ratios:
                 "random_seed": random_seed
             })
 
-start = 385
+start = 33
 exp_nums = range(start, start+len(data))
 for i in range(len(data)):
     entry = data[i]
