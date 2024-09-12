@@ -16,22 +16,20 @@ m_link1 = 20; m_motor1 = 2; I_link1 = 5; I_motor1 = 0.01;
 m_link2 = 20; m_motor2 = 2; I_link2 = 5; I_motor2 = 0.01; 
 l1 = 0.4; l2 = 0.4; a1 = 0.8; a2 = 0.8; kr1 = 100; kr2 = 100; 
 g = 9.81;Fv1 = 20; Fv2 = 20; Fc1 = 1; Fc2 = 1; s1 = 10; s2 = 10;
-Kp = 200*eye(2); Kd = 200*eye(2);
+Kp = 1*eye(2); Kd = 2*eye(2);
 
 num_sine = 1;
 predefined_freq = [1];
-am1 = 0*ones(1,num_sine);
-am2 = 0*ones(1,num_sine);
+am1 = 100*ones(1,num_sine);
+am2 = 100*ones(1,num_sine);
 freq1 = zeros(num_sine,1);
 freq2 = zeros(num_sine,1);
-freq1(1:size(predefined_freq,1)) = predefined_freq;
-freq2(1:size(predefined_freq,1)) = predefined_freq;
+freq1(1:size(predefined_freq,2)) = predefined_freq;
+freq2(1:size(predefined_freq,2)) = predefined_freq;
 if num_sine > size(predefined_freq,1)
     freq1(size(predefined_freq,1)+1:end) = rand(num_sine-size(predefined_freq,1), 1)*10;
     freq2(size(predefined_freq,1)+1:end) = rand(num_sine-size(predefined_freq,1), 1)*10;
 end
-th1 = (rand(num_sine, 1)-0.5)*pi;
-th2 = th1+pi/2;
 
 %% Gaussian noise variances
 var_q = 1e-6;
@@ -44,7 +42,8 @@ n_control = 2;
 t_end = 3;
 sampling_freq = 100;
 tspan = linspace(0, t_end, sampling_freq*t_end+1);
-theta1_theta2_space = [-pi, pi; -pi, pi];
+theta1_theta2_space = [-pi/6*5, pi/6*5; 
+                        -pi/6*5, pi/6*5];
 points_per_dim = [20, 20]; % Important!!!
 x1 = linspace(theta1_theta2_space(1,1), theta1_theta2_space(1,2),...
     points_per_dim(1));
@@ -54,6 +53,11 @@ x2 = linspace(theta1_theta2_space(2,1), theta1_theta2_space(2,2),...
 initial_states = zeros(prod(points_per_dim),n_state);
 initial_states(:,1) = reshape(X1,[],1);
 initial_states(:,2) = reshape(X2,[],1);
+
+%% Collect all sinusoidal phases
+num_traj = size(initial_states,1);
+all_th1 = zeros(num_traj, num_sine);
+all_th2 = zeros(num_traj, num_sine);
 
 %% Simulation
 X = zeros(size(initial_states,1)*sampling_freq*t_end,n_state); % noisy
@@ -67,12 +71,17 @@ data_size = 0;
 fprintf("==> Total data size %e\n", size(X,1));
 
 for i=1:size(initial_states,1)
+    th1 = (rand(num_sine, 1)-0.5)*2*pi;
+    th2 = (rand(num_sine, 1)-0.5)*2*pi;
+    all_th1(i,:) = th1';
+    all_th2(i,:) = th2';
+
     if rem(i,5) == 0
         fprintf("==> Simulating %03d out of %03d\n", i, size(initial_states,1));
     end
 
     x0 = initial_states(i,:)';
-    qd = -initial_states(i,1:2)';
+    qd = initial_states(i,1:2)';
     [T_tmp, X_true_tmp] = ode45(@eg3_TwoLinkArm_Dynamics,tspan,x0);
     X_measured_tmp = zeros([size(T_tmp,1),n_state]);
     U_tmp = zeros([size(T_tmp,1),n_control]);
@@ -83,8 +92,7 @@ for i=1:size(initial_states,1)
         x_true_tmp = X_true_tmp(j,:);
         x_measured_tmp = x_true_tmp + sqrt(var_x).*randn(1,n_state);
         x_estimated_tmp = x_true_tmp;
-        g_vector_est = eg3_TwoLinkArm_GravityVector(x_estimated_tmp);
-        u_tmp = eg3_TwoLinkArm_Controller(t_tmp, g_vector_est, x_estimated_tmp);
+        u_tmp = eg3_TwoLinkArm_Controller(t_tmp, x_estimated_tmp);
         x_dot_true_tmp = eg3_TwoLinkArm_Dynamics_with_Input(t_tmp, x_true_tmp, u_tmp)';
         
         X_measured_tmp(j,:) = x_measured_tmp;
@@ -199,10 +207,10 @@ save(fullfile(result_dir,'dataset'),'T','X','X_dot','U', ...
     'm_link1', 'm_motor1', 'I_link1', 'I_motor1', 'm_link2',...
     'm_motor2', 'I_link2', 'I_motor2', 'l1', 'l2', 'a1', 'a2',...
     'kr1', 'kr2', 'g', 'Fv1', 'Fv2', 'qd', 'Kp', 'Kd', ...
-    'am1', 'am2', 'freq1', 'freq2', 'th1', 'th2');
+    'am1', 'am2', 'freq1', 'freq2', 'all_th1', 'all_th2');
 save(fullfile(result_dir,'other'),'X_true', 'X_measured','X_dot_true', ...
     'm_link1', 'm_motor1', 'I_link1', 'I_motor1', 'm_link2',...
     'm_motor2', 'I_link2', 'I_motor2', 'l1', 'l2', 'a1', 'a2',...
     'kr1', 'kr2', 'g', 'Fv1', 'Fv2', 'qd', 'Kp', 'Kd', ...
-    'am1', 'am2', 'freq1', 'freq2', 'th1', 'th2');
+    'am1', 'am2', 'freq1', 'freq2', 'all_th1', 'all_th2');
 fprintf("==> Data saved. Finishing...\n");

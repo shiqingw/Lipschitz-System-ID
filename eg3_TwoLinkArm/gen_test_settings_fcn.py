@@ -24,14 +24,14 @@ def generate_json_script(filename, entry):
                     0.0
                 ],
                 "input_transform_to_inverse": [
-                    1.4116, 
-                    1.3826, 
-                    1.4774, 
-                    1.4832
+                    1.5873,
+                    1.5911,
+                    0.0853,
+                    0.1037
                 ],
                 "output_transform": [
-                    0.2262, 
-                    0.2874
+                    0.0226, 
+                    0.0252
                 ],
                 "train_transform": 0,
                 "zero_at_zero": 1

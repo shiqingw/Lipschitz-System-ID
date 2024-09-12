@@ -26,7 +26,7 @@ function dxdt = eg3_TwoLinkArm_Dynamics(t,x)
     g1 = gravity_vector(1);
     g2 = gravity_vector(2);
 
-    tau = eg3_TwoLinkArm_Controller(t, gravity_vector, x);
+    tau = eg3_TwoLinkArm_Controller(t, x);
     tau1 = tau(1);
     tau2 = tau(2);
     

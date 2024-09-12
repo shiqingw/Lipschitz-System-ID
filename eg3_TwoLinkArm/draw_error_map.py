@@ -51,8 +51,8 @@ def diagnosis(exp_num):
     true_system_name = test_settings["true_system_name"]
     nominal_system = get_system(nominal_system_name).to(device)
     true_system = get_system(true_system_name).to(device)
-    state_space = np.array([[-np.pi/2, np.pi/2],
-                            [-np.pi/2, np.pi/2],
+    state_space = np.array([[-np.pi, np.pi],
+                            [-np.pi, np.pi],
                             [-0.1, 0.1],
                             [-0.1, 0.1]], dtype=config.np_dtype)
 
@@ -120,6 +120,8 @@ def diagnosis(exp_num):
     state_np = np.zeros((X_flatten.shape[0], 4), dtype=config.np_dtype)
     state_np[:,0] = X_flatten
     state_np[:,1] = Y_flatten
+    state_np[:,2] = 0.2
+    state_np[:,3] = 0.2
     state = torch.from_numpy(state_np).to(device)
     residual = model(state)
     action = torch.zeros((state.shape[0], 2), dtype=config.pt_dtype).to(device)
@@ -240,8 +242,7 @@ def diagnosis(exp_num):
     
 if __name__ == "__main__":
 
-    # exp_nums = [81, 82, 83, 84, 161, 162, 163, 164, 261, 262, 263, 264]
-    exp_nums = [373, 374, 375, 376, 453, 454, 455, 456, 557, 558, 559, 560]
+    exp_nums = [21, 22, 23, 24, 37, 38, 39, 40]
     for exp_num in exp_nums:
         diagnosis(exp_num)
         print("#############################################")

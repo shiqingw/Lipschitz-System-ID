@@ -1,6 +1,6 @@
 function dxdt = eg3_TwoLinkArm_Dynamics_with_Input(t,x,tau)
     global m_link1 m_motor1 I_link1 I_motor1 m_link2 m_motor2 I_link2 ...
-    I_motor2 l1 l2 a1 a2 kr1 kr2 g Fv1 Fv2;
+    I_motor2 l1 l2 a1 a2 kr1 kr2 g Fv1 Fv2 Fc1 Fc2 s1 s2;
     theta1 = x(1); % origin shifted to the downward position
     theta2 = x(2);
     dtheta1 = x(3);
@@ -29,8 +29,8 @@ function dxdt = eg3_TwoLinkArm_Dynamics_with_Input(t,x,tau)
     tau1 = tau(1);
     tau2 = tau(2);
     
-    b1 = tau1 - g1 - C11 * dtheta1 - C12 * dtheta2 - Fv1 * dtheta1;
-    b2 = tau2 - g2 - C21 * dtheta1 - C22 * dtheta2 - Fv2 * dtheta2;
+    b1 = tau1 - g1 - C11 * dtheta1 - C12 * dtheta2 - Fv1 * dtheta1 - Fc1*tanh(s1*dtheta1);
+    b2 = tau2 - g2 - C21 * dtheta1 - C22 * dtheta2 - Fv2 * dtheta2 - Fc2*tanh(s2*dtheta2);
 
     M = [M11, M12; M21, M22];
     b = [b1; b2];
