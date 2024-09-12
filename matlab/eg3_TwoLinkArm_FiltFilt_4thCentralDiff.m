@@ -3,7 +3,7 @@ rng('default');
 filepath = fileparts(mfilename('fullpath'));
 parts = strsplit(filepath, filesep);
 parent_path = strjoin(parts(1:end-1), filesep);
-result_dir = fullfile(parent_path, 'datasets', 'eg3_TwoLinkArm', '002');
+result_dir = fullfile(parent_path, 'datasets', 'eg3_TwoLinkArm', '001');
 rng(0);
 copyfile(strcat(mfilename('fullpath'),'.m'),result_dir)
 
@@ -15,7 +15,7 @@ global m_link1 m_motor1 I_link1 I_motor1 m_link2 m_motor2 I_link2 ...
 m_link1 = 20; m_motor1 = 2; I_link1 = 5; I_motor1 = 0.01; 
 m_link2 = 20; m_motor2 = 2; I_link2 = 5; I_motor2 = 0.01; 
 l1 = 0.4; l2 = 0.4; a1 = 0.8; a2 = 0.8; kr1 = 100; kr2 = 100; 
-g = 9.81;Fv1 = 20; Fv2 = 20; Fc1 = 0; Fc2 = 0; s1 = 0; s2 = 0;
+g = 9.81;Fv1 = 20; Fv2 = 20; Fc1 = 1; Fc2 = 1; s1 = 10; s2 = 10;
 Kp = 200*eye(2); Kd = 200*eye(2);
 
 num_sine = 1;
@@ -34,8 +34,8 @@ th1 = (rand(num_sine, 1)-0.5)*pi;
 th2 = th1+pi/2;
 
 %% Gaussian noise variances
-var_q = 0.0001;
-var_q_dot = 0.0001;
+var_q = 1e-6;
+var_q_dot = 1e-6;
 var_x = [var_q,var_q,var_q_dot,var_q_dot];
 
 %% Simulation settings

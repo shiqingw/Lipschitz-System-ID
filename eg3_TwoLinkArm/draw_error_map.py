@@ -51,10 +51,10 @@ def diagnosis(exp_num):
     true_system_name = test_settings["true_system_name"]
     nominal_system = get_system(nominal_system_name).to(device)
     true_system = get_system(true_system_name).to(device)
-    state_space = np.array([[-np.pi/4, np.pi/4],
-                            [-np.pi/4, np.pi/4],
-                            [-0.01, 0.01],
-                            [-0.01, 0.01]], dtype=config.np_dtype)
+    state_space = np.array([[-np.pi/2, np.pi/2],
+                            [-np.pi/2, np.pi/2],
+                            [-0.1, 0.1],
+                            [-0.1, 0.1]], dtype=config.np_dtype)
 
     # Build neural network
     nn_config = test_settings["nn_config"]
@@ -102,10 +102,146 @@ def diagnosis(exp_num):
     Z = residual_norm.reshape(D1.shape)
     print("==> Max Error:", np.max(Z))
 
+    # Settings
+    print("==> Drawing...")
+    plt.rcParams['font.family'] = 'serif'
+    plt.rcParams.update({"text.usetex": True,
+                         "text.latex.preamble": r"\usepackage{amsmath}"})
+    plt.rcParams.update({'pdf.fonttype': 42})
+
+    # Draw on (q1, q2)
+    fig, ax = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(8, 6))
+    N = 200
+    x = np.linspace(state_space[0,0], state_space[0,1], N)
+    y = np.linspace(state_space[1,0], state_space[1,1], N)
+    X, Y = np.meshgrid(x, y)
+    X_flatten = X.flatten()
+    Y_flatten = Y.flatten()
+    state_np = np.zeros((X_flatten.shape[0], 4), dtype=config.np_dtype)
+    state_np[:,0] = X_flatten
+    state_np[:,1] = Y_flatten
+    state = torch.from_numpy(state_np).to(device)
+    residual = model(state)
+    action = torch.zeros((state.shape[0], 2), dtype=config.pt_dtype).to(device)
+    selected_indices = [2, 3]
+    residual_norm = torch.nn.functional.pairwise_distance(
+        residual + nominal_system(state, action)[:,selected_indices], 
+        true_system(state, action)[:,selected_indices]).detach().cpu().numpy()
+    
+    Z = residual_norm.reshape(X.shape)
+
+    vmin = 0
+    vmax = 0.5
+    surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False, vmin=vmin, vmax=vmax)
+
+    # Add a color bar which maps values to colors.
+    ticksize = 22
+    cbar = fig.colorbar(surf, shrink=0.5, aspect=10, pad=0.09, location='right', orientation='vertical')
+    cbar.ax.tick_params(labelsize=ticksize)
+    cbar.ax.yaxis.set_major_locator(LinearLocator(5))
+    cbar.ax.yaxis.set_major_formatter(FuncFormatter(custom_formatter))
+
+    # Set labels for the axes
+    labelsize = 30
+    ax.set_xlabel(r"$q1$", fontsize=labelsize, labelpad=10)
+    ax.set_ylabel(r"$q2$", fontsize=labelsize, labelpad=18)
+    # ax.set_zlabel(r"$\lVert f(x)-\Phi(x) \rVert$", fontsize=labelsize, labelpad=20)
+
+    # Set ticks
+    ax.set_xlim(x.min(), x.max())
+    ax.xaxis.set_major_locator(LinearLocator(5))
+    ax.xaxis.set_major_formatter(FuncFormatter(custom_formatter))
+
+    ax.set_yticklabels(ax.get_yticks(), 
+                verticalalignment='center_baseline',
+                horizontalalignment='left')
+    ax.set_ylim(y.min(), y.max())
+    ax.yaxis.set_major_locator(LinearLocator(5))
+    ax.yaxis.set_major_formatter(FuncFormatter(custom_formatter))
+
+    ax.set_zticklabels(ax.get_zticks(), 
+                verticalalignment='center',
+                horizontalalignment='left')
+    ax.set_zlim(vmin, vmax)
+    ax.zaxis.set_major_locator(LinearLocator(5))
+    ax.zaxis.set_major_formatter(FuncFormatter(custom_formatter))
+
+    ax.tick_params(axis='x', which='major', labelsize=ticksize, pad=0)
+    ax.tick_params(axis='y', which='major', labelsize=ticksize, pad=0)
+    ax.tick_params(axis='z', which='major', labelsize=ticksize, pad=0)
+
+    plt.savefig(os.path.join(figure_dir, "error_map_q_{:03d}.pdf".format(exp_num)), bbox_inches='tight', pad_inches=0.05)
+    plt.close(fig)
+
+
+    # Draw on (dq1, dq2)
+    fig, ax = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(8, 6))
+    N = 200
+    x = np.linspace(state_space[2,0], state_space[2,1], N)
+    y = np.linspace(state_space[3,0], state_space[3,1], N)
+    X, Y = np.meshgrid(x, y)
+    X_flatten = X.flatten()
+    Y_flatten = Y.flatten()
+    state_np = np.zeros((X_flatten.shape[0], 4), dtype=config.np_dtype)
+    state_np[:,2] = X_flatten
+    state_np[:,3] = Y_flatten
+    state = torch.from_numpy(state_np).to(device)
+    residual = model(state)
+    action = torch.zeros((state.shape[0], 2), dtype=config.pt_dtype).to(device)
+    selected_indices = [2, 3]
+    residual_norm = torch.nn.functional.pairwise_distance(
+        residual + nominal_system(state, action)[:,selected_indices], 
+        true_system(state, action)[:,selected_indices]).detach().cpu().numpy()
+    
+    Z = residual_norm.reshape(X.shape)
+
+    vmin = 0
+    vmax = 0.5
+    surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False, vmin=vmin, vmax=vmax)
+
+    # Add a color bar which maps values to colors.
+    ticksize = 22
+    cbar = fig.colorbar(surf, shrink=0.5, aspect=10, pad=0.09, location='right', orientation='vertical')
+    cbar.ax.tick_params(labelsize=ticksize)
+    cbar.ax.yaxis.set_major_locator(LinearLocator(5))
+    cbar.ax.yaxis.set_major_formatter(FuncFormatter(custom_formatter))
+
+    # Set labels for the axes
+    labelsize = 30
+    ax.set_xlabel(r"$dq1$", fontsize=labelsize, labelpad=10)
+    ax.set_ylabel(r"$dq2$", fontsize=labelsize, labelpad=18)
+    # ax.set_zlabel(r"$\lVert f(x)-\Phi(x) \rVert$", fontsize=labelsize, labelpad=20)
+
+    # Set ticks
+    ax.set_xlim(x.min(), x.max())
+    ax.xaxis.set_major_locator(LinearLocator(5))
+    ax.xaxis.set_major_formatter(FuncFormatter(custom_formatter))
+
+    ax.set_yticklabels(ax.get_yticks(), 
+                verticalalignment='center_baseline',
+                horizontalalignment='left')
+    ax.set_ylim(y.min(), y.max())
+    ax.yaxis.set_major_locator(LinearLocator(5))
+    ax.yaxis.set_major_formatter(FuncFormatter(custom_formatter))
+
+    ax.set_zticklabels(ax.get_zticks(), 
+                verticalalignment='center',
+                horizontalalignment='left')
+    ax.set_zlim(vmin, vmax)
+    ax.zaxis.set_major_locator(LinearLocator(5))
+    ax.zaxis.set_major_formatter(FuncFormatter(custom_formatter))
+
+    ax.tick_params(axis='x', which='major', labelsize=ticksize, pad=0)
+    ax.tick_params(axis='y', which='major', labelsize=ticksize, pad=0)
+    ax.tick_params(axis='z', which='major', labelsize=ticksize, pad=0)
+
+    plt.savefig(os.path.join(figure_dir, "error_map_dq_{:03d}.pdf".format(exp_num)), bbox_inches='tight', pad_inches=0.05)
+    plt.close(fig)
     
 if __name__ == "__main__":
 
-    exp_nums = [81, 82, 83, 84, 161, 162, 163, 164, 261, 262, 263, 264]
+    # exp_nums = [81, 82, 83, 84, 161, 162, 163, 164, 261, 262, 263, 264]
+    exp_nums = [373, 374, 375, 376, 453, 454, 455, 456, 557, 558, 559, 560]
     for exp_num in exp_nums:
         diagnosis(exp_num)
         print("#############################################")
