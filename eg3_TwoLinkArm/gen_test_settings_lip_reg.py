@@ -6,8 +6,8 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 def generate_json_script(filename, entry):
     data = {
-            "nominal_system_name": "TwoLinkArm2_nominal",
-            "true_system_name": "TwoLinkArm2_true",
+            "nominal_system_name": "TwoLinkArm1_nominal",
+            "true_system_name": "TwoLinkArm1_true",
             "seed": entry["random_seed"],
             "nn_config": {
                 "in_features": 4,
@@ -37,7 +37,7 @@ def generate_json_script(filename, entry):
                 "zero_at_zero": 0
             },
             "train_config": {
-                "dataset": "1",
+                "dataset": "2",
                 "train_ratio": 0.8,
                 "further_train_ratio": entry["train_ratio"],
                 "seed_train_test": "None",
@@ -73,7 +73,7 @@ for train_ratio in train_ratios:
                 "random_seed": random_seed
             })
 
-start = 193
+start = 481
 exp_nums = range(start, start+len(data))
 for i in range(len(data)):
     entry = data[i]

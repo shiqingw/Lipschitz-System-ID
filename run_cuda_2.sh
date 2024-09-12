@@ -1,144 +1,144 @@
-mkdir eg3_results/003
-python -u eg3_TwoLinkArm/train.py --exp_num 3 --device cuda:2 > eg3_results/003/output.out
-mkdir eg3_results/007
-python -u eg3_TwoLinkArm/train.py --exp_num 7 --device cuda:2 > eg3_results/007/output.out
-mkdir eg3_results/011
-python -u eg3_TwoLinkArm/train.py --exp_num 11 --device cuda:2 > eg3_results/011/output.out
-mkdir eg3_results/015
-python -u eg3_TwoLinkArm/train.py --exp_num 15 --device cuda:2 > eg3_results/015/output.out
-mkdir eg3_results/019
-python -u eg3_TwoLinkArm/train.py --exp_num 19 --device cuda:2 > eg3_results/019/output.out
-mkdir eg3_results/023
-python -u eg3_TwoLinkArm/train.py --exp_num 23 --device cuda:2 > eg3_results/023/output.out
-mkdir eg3_results/027
-python -u eg3_TwoLinkArm/train.py --exp_num 27 --device cuda:2 > eg3_results/027/output.out
-mkdir eg3_results/031
-python -u eg3_TwoLinkArm/train.py --exp_num 31 --device cuda:2 > eg3_results/031/output.out
-mkdir eg3_results/035
-python -u eg3_TwoLinkArm/train.py --exp_num 35 --device cuda:2 > eg3_results/035/output.out
-mkdir eg3_results/039
-python -u eg3_TwoLinkArm/train.py --exp_num 39 --device cuda:2 > eg3_results/039/output.out
-mkdir eg3_results/043
-python -u eg3_TwoLinkArm/train.py --exp_num 43 --device cuda:2 > eg3_results/043/output.out
-mkdir eg3_results/047
-python -u eg3_TwoLinkArm/train.py --exp_num 47 --device cuda:2 > eg3_results/047/output.out
-mkdir eg3_results/051
-python -u eg3_TwoLinkArm/train.py --exp_num 51 --device cuda:2 > eg3_results/051/output.out
-mkdir eg3_results/055
-python -u eg3_TwoLinkArm/train.py --exp_num 55 --device cuda:2 > eg3_results/055/output.out
-mkdir eg3_results/059
-python -u eg3_TwoLinkArm/train.py --exp_num 59 --device cuda:2 > eg3_results/059/output.out
-mkdir eg3_results/063
-python -u eg3_TwoLinkArm/train.py --exp_num 63 --device cuda:2 > eg3_results/063/output.out
-mkdir eg3_results/067
-python -u eg3_TwoLinkArm/train.py --exp_num 67 --device cuda:2 > eg3_results/067/output.out
-mkdir eg3_results/071
-python -u eg3_TwoLinkArm/train.py --exp_num 71 --device cuda:2 > eg3_results/071/output.out
-mkdir eg3_results/075
-python -u eg3_TwoLinkArm/train.py --exp_num 75 --device cuda:2 > eg3_results/075/output.out
-mkdir eg3_results/079
-python -u eg3_TwoLinkArm/train.py --exp_num 79 --device cuda:2 > eg3_results/079/output.out
-mkdir eg3_results/083
-python -u eg3_TwoLinkArm/train.py --exp_num 83 --device cuda:2 > eg3_results/083/output.out
-mkdir eg3_results/087
-python -u eg3_TwoLinkArm/train.py --exp_num 87 --device cuda:2 > eg3_results/087/output.out
-mkdir eg3_results/091
-python -u eg3_TwoLinkArm/train.py --exp_num 91 --device cuda:2 > eg3_results/091/output.out
-mkdir eg3_results/095
-python -u eg3_TwoLinkArm/train.py --exp_num 95 --device cuda:2 > eg3_results/095/output.out
-mkdir eg3_results/099
-python -u eg3_TwoLinkArm/train.py --exp_num 99 --device cuda:2 > eg3_results/099/output.out
-mkdir eg3_results/103
-python -u eg3_TwoLinkArm/train.py --exp_num 103 --device cuda:2 > eg3_results/103/output.out
-mkdir eg3_results/107
-python -u eg3_TwoLinkArm/train.py --exp_num 107 --device cuda:2 > eg3_results/107/output.out
-mkdir eg3_results/111
-python -u eg3_TwoLinkArm/train.py --exp_num 111 --device cuda:2 > eg3_results/111/output.out
-mkdir eg3_results/115
-python -u eg3_TwoLinkArm/train.py --exp_num 115 --device cuda:2 > eg3_results/115/output.out
-mkdir eg3_results/119
-python -u eg3_TwoLinkArm/train.py --exp_num 119 --device cuda:2 > eg3_results/119/output.out
-mkdir eg3_results/123
-python -u eg3_TwoLinkArm/train.py --exp_num 123 --device cuda:2 > eg3_results/123/output.out
-mkdir eg3_results/127
-python -u eg3_TwoLinkArm/train.py --exp_num 127 --device cuda:2 > eg3_results/127/output.out
-mkdir eg3_results/131
-python -u eg3_TwoLinkArm/train.py --exp_num 131 --device cuda:2 > eg3_results/131/output.out
-mkdir eg3_results/135
-python -u eg3_TwoLinkArm/train.py --exp_num 135 --device cuda:2 > eg3_results/135/output.out
-mkdir eg3_results/139
-python -u eg3_TwoLinkArm/train.py --exp_num 139 --device cuda:2 > eg3_results/139/output.out
-mkdir eg3_results/143
-python -u eg3_TwoLinkArm/train.py --exp_num 143 --device cuda:2 > eg3_results/143/output.out
-mkdir eg3_results/147
-python -u eg3_TwoLinkArm/train.py --exp_num 147 --device cuda:2 > eg3_results/147/output.out
-mkdir eg3_results/151
-python -u eg3_TwoLinkArm/train.py --exp_num 151 --device cuda:2 > eg3_results/151/output.out
-mkdir eg3_results/155
-python -u eg3_TwoLinkArm/train.py --exp_num 155 --device cuda:2 > eg3_results/155/output.out
-mkdir eg3_results/159
-python -u eg3_TwoLinkArm/train.py --exp_num 159 --device cuda:2 > eg3_results/159/output.out
-mkdir eg3_results/163
-python -u eg3_TwoLinkArm/train.py --exp_num 163 --device cuda:2 > eg3_results/163/output.out
-mkdir eg3_results/167
-python -u eg3_TwoLinkArm/train.py --exp_num 167 --device cuda:2 > eg3_results/167/output.out
-mkdir eg3_results/171
-python -u eg3_TwoLinkArm/train.py --exp_num 171 --device cuda:2 > eg3_results/171/output.out
-mkdir eg3_results/175
-python -u eg3_TwoLinkArm/train.py --exp_num 175 --device cuda:2 > eg3_results/175/output.out
-mkdir eg3_results/179
-python -u eg3_TwoLinkArm/train.py --exp_num 179 --device cuda:2 > eg3_results/179/output.out
-mkdir eg3_results/183
-python -u eg3_TwoLinkArm/train.py --exp_num 183 --device cuda:2 > eg3_results/183/output.out
-mkdir eg3_results/187
-python -u eg3_TwoLinkArm/train.py --exp_num 187 --device cuda:2 > eg3_results/187/output.out
-mkdir eg3_results/191
-python -u eg3_TwoLinkArm/train.py --exp_num 191 --device cuda:2 > eg3_results/191/output.out
-mkdir eg3_results/195
-python -u eg3_TwoLinkArm/train.py --exp_num 195 --device cuda:2 > eg3_results/195/output.out
-mkdir eg3_results/199
-python -u eg3_TwoLinkArm/train.py --exp_num 199 --device cuda:2 > eg3_results/199/output.out
-mkdir eg3_results/203
-python -u eg3_TwoLinkArm/train.py --exp_num 203 --device cuda:2 > eg3_results/203/output.out
-mkdir eg3_results/207
-python -u eg3_TwoLinkArm/train.py --exp_num 207 --device cuda:2 > eg3_results/207/output.out
-mkdir eg3_results/211
-python -u eg3_TwoLinkArm/train.py --exp_num 211 --device cuda:2 > eg3_results/211/output.out
-mkdir eg3_results/215
-python -u eg3_TwoLinkArm/train.py --exp_num 215 --device cuda:2 > eg3_results/215/output.out
-mkdir eg3_results/219
-python -u eg3_TwoLinkArm/train.py --exp_num 219 --device cuda:2 > eg3_results/219/output.out
-mkdir eg3_results/223
-python -u eg3_TwoLinkArm/train.py --exp_num 223 --device cuda:2 > eg3_results/223/output.out
-mkdir eg3_results/227
-python -u eg3_TwoLinkArm/train.py --exp_num 227 --device cuda:2 > eg3_results/227/output.out
-mkdir eg3_results/231
-python -u eg3_TwoLinkArm/train.py --exp_num 231 --device cuda:2 > eg3_results/231/output.out
-mkdir eg3_results/235
-python -u eg3_TwoLinkArm/train.py --exp_num 235 --device cuda:2 > eg3_results/235/output.out
-mkdir eg3_results/239
-python -u eg3_TwoLinkArm/train.py --exp_num 239 --device cuda:2 > eg3_results/239/output.out
-mkdir eg3_results/243
-python -u eg3_TwoLinkArm/train.py --exp_num 243 --device cuda:2 > eg3_results/243/output.out
-mkdir eg3_results/247
-python -u eg3_TwoLinkArm/train.py --exp_num 247 --device cuda:2 > eg3_results/247/output.out
-mkdir eg3_results/251
-python -u eg3_TwoLinkArm/train.py --exp_num 251 --device cuda:2 > eg3_results/251/output.out
-mkdir eg3_results/255
-python -u eg3_TwoLinkArm/train.py --exp_num 255 --device cuda:2 > eg3_results/255/output.out
-mkdir eg3_results/259
-python -u eg3_TwoLinkArm/train.py --exp_num 259 --device cuda:2 > eg3_results/259/output.out
-mkdir eg3_results/263
-python -u eg3_TwoLinkArm/train.py --exp_num 263 --device cuda:2 > eg3_results/263/output.out
-mkdir eg3_results/267
-python -u eg3_TwoLinkArm/train.py --exp_num 267 --device cuda:2 > eg3_results/267/output.out
-mkdir eg3_results/271
-python -u eg3_TwoLinkArm/train.py --exp_num 271 --device cuda:2 > eg3_results/271/output.out
-mkdir eg3_results/275
-python -u eg3_TwoLinkArm/train.py --exp_num 275 --device cuda:2 > eg3_results/275/output.out
-mkdir eg3_results/279
-python -u eg3_TwoLinkArm/train.py --exp_num 279 --device cuda:2 > eg3_results/279/output.out
-mkdir eg3_results/283
-python -u eg3_TwoLinkArm/train.py --exp_num 283 --device cuda:2 > eg3_results/283/output.out
-mkdir eg3_results/287
-python -u eg3_TwoLinkArm/train.py --exp_num 287 --device cuda:2 > eg3_results/287/output.out
+mkdir eg3_results/291
+python -u eg3_TwoLinkArm/train.py --exp_num 291 --device cuda:2 > eg3_results/291/output.out
+mkdir eg3_results/295
+python -u eg3_TwoLinkArm/train.py --exp_num 295 --device cuda:2 > eg3_results/295/output.out
+mkdir eg3_results/299
+python -u eg3_TwoLinkArm/train.py --exp_num 299 --device cuda:2 > eg3_results/299/output.out
+mkdir eg3_results/303
+python -u eg3_TwoLinkArm/train.py --exp_num 303 --device cuda:2 > eg3_results/303/output.out
+mkdir eg3_results/307
+python -u eg3_TwoLinkArm/train.py --exp_num 307 --device cuda:2 > eg3_results/307/output.out
+mkdir eg3_results/311
+python -u eg3_TwoLinkArm/train.py --exp_num 311 --device cuda:2 > eg3_results/311/output.out
+mkdir eg3_results/315
+python -u eg3_TwoLinkArm/train.py --exp_num 315 --device cuda:2 > eg3_results/315/output.out
+mkdir eg3_results/319
+python -u eg3_TwoLinkArm/train.py --exp_num 319 --device cuda:2 > eg3_results/319/output.out
+mkdir eg3_results/323
+python -u eg3_TwoLinkArm/train.py --exp_num 323 --device cuda:2 > eg3_results/323/output.out
+mkdir eg3_results/327
+python -u eg3_TwoLinkArm/train.py --exp_num 327 --device cuda:2 > eg3_results/327/output.out
+mkdir eg3_results/331
+python -u eg3_TwoLinkArm/train.py --exp_num 331 --device cuda:2 > eg3_results/331/output.out
+mkdir eg3_results/335
+python -u eg3_TwoLinkArm/train.py --exp_num 335 --device cuda:2 > eg3_results/335/output.out
+mkdir eg3_results/339
+python -u eg3_TwoLinkArm/train.py --exp_num 339 --device cuda:2 > eg3_results/339/output.out
+mkdir eg3_results/343
+python -u eg3_TwoLinkArm/train.py --exp_num 343 --device cuda:2 > eg3_results/343/output.out
+mkdir eg3_results/347
+python -u eg3_TwoLinkArm/train.py --exp_num 347 --device cuda:2 > eg3_results/347/output.out
+mkdir eg3_results/351
+python -u eg3_TwoLinkArm/train.py --exp_num 351 --device cuda:2 > eg3_results/351/output.out
+mkdir eg3_results/355
+python -u eg3_TwoLinkArm/train.py --exp_num 355 --device cuda:2 > eg3_results/355/output.out
+mkdir eg3_results/359
+python -u eg3_TwoLinkArm/train.py --exp_num 359 --device cuda:2 > eg3_results/359/output.out
+mkdir eg3_results/363
+python -u eg3_TwoLinkArm/train.py --exp_num 363 --device cuda:2 > eg3_results/363/output.out
+mkdir eg3_results/367
+python -u eg3_TwoLinkArm/train.py --exp_num 367 --device cuda:2 > eg3_results/367/output.out
+mkdir eg3_results/371
+python -u eg3_TwoLinkArm/train.py --exp_num 371 --device cuda:2 > eg3_results/371/output.out
+mkdir eg3_results/375
+python -u eg3_TwoLinkArm/train.py --exp_num 375 --device cuda:2 > eg3_results/375/output.out
+mkdir eg3_results/379
+python -u eg3_TwoLinkArm/train.py --exp_num 379 --device cuda:2 > eg3_results/379/output.out
+mkdir eg3_results/383
+python -u eg3_TwoLinkArm/train.py --exp_num 383 --device cuda:2 > eg3_results/383/output.out
+mkdir eg3_results/387
+python -u eg3_TwoLinkArm/train.py --exp_num 387 --device cuda:2 > eg3_results/387/output.out
+mkdir eg3_results/391
+python -u eg3_TwoLinkArm/train.py --exp_num 391 --device cuda:2 > eg3_results/391/output.out
+mkdir eg3_results/395
+python -u eg3_TwoLinkArm/train.py --exp_num 395 --device cuda:2 > eg3_results/395/output.out
+mkdir eg3_results/399
+python -u eg3_TwoLinkArm/train.py --exp_num 399 --device cuda:2 > eg3_results/399/output.out
+mkdir eg3_results/403
+python -u eg3_TwoLinkArm/train.py --exp_num 403 --device cuda:2 > eg3_results/403/output.out
+mkdir eg3_results/407
+python -u eg3_TwoLinkArm/train.py --exp_num 407 --device cuda:2 > eg3_results/407/output.out
+mkdir eg3_results/411
+python -u eg3_TwoLinkArm/train.py --exp_num 411 --device cuda:2 > eg3_results/411/output.out
+mkdir eg3_results/415
+python -u eg3_TwoLinkArm/train.py --exp_num 415 --device cuda:2 > eg3_results/415/output.out
+mkdir eg3_results/419
+python -u eg3_TwoLinkArm/train.py --exp_num 419 --device cuda:2 > eg3_results/419/output.out
+mkdir eg3_results/423
+python -u eg3_TwoLinkArm/train.py --exp_num 423 --device cuda:2 > eg3_results/423/output.out
+mkdir eg3_results/427
+python -u eg3_TwoLinkArm/train.py --exp_num 427 --device cuda:2 > eg3_results/427/output.out
+mkdir eg3_results/431
+python -u eg3_TwoLinkArm/train.py --exp_num 431 --device cuda:2 > eg3_results/431/output.out
+mkdir eg3_results/435
+python -u eg3_TwoLinkArm/train.py --exp_num 435 --device cuda:2 > eg3_results/435/output.out
+mkdir eg3_results/439
+python -u eg3_TwoLinkArm/train.py --exp_num 439 --device cuda:2 > eg3_results/439/output.out
+mkdir eg3_results/443
+python -u eg3_TwoLinkArm/train.py --exp_num 443 --device cuda:2 > eg3_results/443/output.out
+mkdir eg3_results/447
+python -u eg3_TwoLinkArm/train.py --exp_num 447 --device cuda:2 > eg3_results/447/output.out
+mkdir eg3_results/451
+python -u eg3_TwoLinkArm/train.py --exp_num 451 --device cuda:2 > eg3_results/451/output.out
+mkdir eg3_results/455
+python -u eg3_TwoLinkArm/train.py --exp_num 455 --device cuda:2 > eg3_results/455/output.out
+mkdir eg3_results/459
+python -u eg3_TwoLinkArm/train.py --exp_num 459 --device cuda:2 > eg3_results/459/output.out
+mkdir eg3_results/463
+python -u eg3_TwoLinkArm/train.py --exp_num 463 --device cuda:2 > eg3_results/463/output.out
+mkdir eg3_results/467
+python -u eg3_TwoLinkArm/train.py --exp_num 467 --device cuda:2 > eg3_results/467/output.out
+mkdir eg3_results/471
+python -u eg3_TwoLinkArm/train.py --exp_num 471 --device cuda:2 > eg3_results/471/output.out
+mkdir eg3_results/475
+python -u eg3_TwoLinkArm/train.py --exp_num 475 --device cuda:2 > eg3_results/475/output.out
+mkdir eg3_results/479
+python -u eg3_TwoLinkArm/train.py --exp_num 479 --device cuda:2 > eg3_results/479/output.out
+mkdir eg3_results/483
+python -u eg3_TwoLinkArm/train.py --exp_num 483 --device cuda:2 > eg3_results/483/output.out
+mkdir eg3_results/487
+python -u eg3_TwoLinkArm/train.py --exp_num 487 --device cuda:2 > eg3_results/487/output.out
+mkdir eg3_results/491
+python -u eg3_TwoLinkArm/train.py --exp_num 491 --device cuda:2 > eg3_results/491/output.out
+mkdir eg3_results/495
+python -u eg3_TwoLinkArm/train.py --exp_num 495 --device cuda:2 > eg3_results/495/output.out
+mkdir eg3_results/499
+python -u eg3_TwoLinkArm/train.py --exp_num 499 --device cuda:2 > eg3_results/499/output.out
+mkdir eg3_results/503
+python -u eg3_TwoLinkArm/train.py --exp_num 503 --device cuda:2 > eg3_results/503/output.out
+mkdir eg3_results/507
+python -u eg3_TwoLinkArm/train.py --exp_num 507 --device cuda:2 > eg3_results/507/output.out
+mkdir eg3_results/511
+python -u eg3_TwoLinkArm/train.py --exp_num 511 --device cuda:2 > eg3_results/511/output.out
+mkdir eg3_results/515
+python -u eg3_TwoLinkArm/train.py --exp_num 515 --device cuda:2 > eg3_results/515/output.out
+mkdir eg3_results/519
+python -u eg3_TwoLinkArm/train.py --exp_num 519 --device cuda:2 > eg3_results/519/output.out
+mkdir eg3_results/523
+python -u eg3_TwoLinkArm/train.py --exp_num 523 --device cuda:2 > eg3_results/523/output.out
+mkdir eg3_results/527
+python -u eg3_TwoLinkArm/train.py --exp_num 527 --device cuda:2 > eg3_results/527/output.out
+mkdir eg3_results/531
+python -u eg3_TwoLinkArm/train.py --exp_num 531 --device cuda:2 > eg3_results/531/output.out
+mkdir eg3_results/535
+python -u eg3_TwoLinkArm/train.py --exp_num 535 --device cuda:2 > eg3_results/535/output.out
+mkdir eg3_results/539
+python -u eg3_TwoLinkArm/train.py --exp_num 539 --device cuda:2 > eg3_results/539/output.out
+mkdir eg3_results/543
+python -u eg3_TwoLinkArm/train.py --exp_num 543 --device cuda:2 > eg3_results/543/output.out
+mkdir eg3_results/547
+python -u eg3_TwoLinkArm/train.py --exp_num 547 --device cuda:2 > eg3_results/547/output.out
+mkdir eg3_results/551
+python -u eg3_TwoLinkArm/train.py --exp_num 551 --device cuda:2 > eg3_results/551/output.out
+mkdir eg3_results/555
+python -u eg3_TwoLinkArm/train.py --exp_num 555 --device cuda:2 > eg3_results/555/output.out
+mkdir eg3_results/559
+python -u eg3_TwoLinkArm/train.py --exp_num 559 --device cuda:2 > eg3_results/559/output.out
+mkdir eg3_results/563
+python -u eg3_TwoLinkArm/train.py --exp_num 563 --device cuda:2 > eg3_results/563/output.out
+mkdir eg3_results/567
+python -u eg3_TwoLinkArm/train.py --exp_num 567 --device cuda:2 > eg3_results/567/output.out
+mkdir eg3_results/571
+python -u eg3_TwoLinkArm/train.py --exp_num 571 --device cuda:2 > eg3_results/571/output.out
+mkdir eg3_results/575
+python -u eg3_TwoLinkArm/train.py --exp_num 575 --device cuda:2 > eg3_results/575/output.out
