@@ -22,12 +22,12 @@ def generate_json_script(filename, entry):
                     0.0
                 ],
                 "input_transform_to_inverse": [
-                    1.9646,
-                    1.9646
+                    1.9354,
+                    1.9354
                 ],
                 "output_transform": [
-                    3.9366,
-                    3.9363
+                    3.8759, 
+                    3.8759
                 ],
                 "train_transform": 0,
                 "zero_at_zero": 1
@@ -55,7 +55,7 @@ train_ratios = [0.25, 0.5, 1.0]
 train_ratios.sort()
 gammas = [0.5, 1, 2, 4, 8, 16]
 gammas.sort()
-random_seeds = [100, 200, 300]
+random_seeds = [0, 100, 200, 300]
 random_seeds.sort()
 
 # iterate over all combinations of gammas, train_ratios, and random_seeds and generate a test_settings file for each
@@ -69,7 +69,7 @@ for train_ratio in train_ratios:
                 "random_seed": random_seed
             })
 
-start = 67
+start = 1
 exp_nums = range(start, start+len(data))
 for i in range(len(data)):
     entry = data[i]

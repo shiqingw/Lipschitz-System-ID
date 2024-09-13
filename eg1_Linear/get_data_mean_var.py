@@ -69,7 +69,7 @@ if __name__ == '__main__':
     further_train_ratio = train_config["further_train_ratio"]
     seed_train_test = train_config["seed_train_test"]
     seed_actual_train = train_config["seed_actual_train"]
-    train_dataset, test_dataset = get_test_and_training_data(dataset, train_ratio, further_train_ratio, seed_train_test, seed_actual_train)
+    train_dataset, test_dataset = get_test_and_training_data(dataset, train_ratio, further_train_ratio, seed_train_test=None, seed_actual_train=None)
 
     # draw train and test data
     print("==> Drawing...")
