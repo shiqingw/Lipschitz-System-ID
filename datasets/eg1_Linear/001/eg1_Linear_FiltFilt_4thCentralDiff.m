@@ -10,8 +10,8 @@ copyfile(strcat(mfilename('fullpath'),'.m'),result_dir)
 %% Define global parameters
 n_state = 2;
 n_control = 1; % actually, there is no control
-A_sys = [-0.1, 2.0;
-        -2.0, -0.1];
+A_sys = [-0.2, 2.0;
+        -2.0, -0.2];
 mu_noise = [0, 0];
 sigma_noise = 0*eye(n_state);
 try chol(sigma_noise, 'upper')

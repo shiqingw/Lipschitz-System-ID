@@ -1,19 +1,70 @@
 import numpy as np
-from scipy.spatial import KDTree
+FCN_exp3_025 = np.array([
+6.629E-05,
+6.551E-05,
+6.482E-05,
+6.523E-05])
 
-# Generate some random 2D data points
-data_points = np.array([[1,1,1,1],
-                       [0,0,0,0]])
+FCN_exp3_050 = np.array([
+6.580E-05,
+6.516E-05,
+6.452E-05,
+6.486E-05])
 
-# Create a KDTree from the data points
-kd_tree = KDTree(data_points)
+FCN_exp3_100 = np.array([
+6.536E-05,
+6.479E-05,
+6.415E-05,
+6.453E-05])
 
-# Query the nearest neighbor of a new point
-query_point = np.array([0.5, 0.5, 0.5, 0.5])
-distance, index = kd_tree.query(query_point, k=2)
-print(kd_tree.query_ball_point(query_point, 0.4, p=np.inf))
+LRN_exp3_025 = np.array([
+6.846E-05,
+6.834E-05,
+6.735E-05,
+6.749E-05
+])
 
-# Print the nearest neighbor and its distance
-print(f"Nearest neighbor index: {index}")
-print(f"Nearest neighbor coordinates: {data_points[index]}")
-print(f"Distance to nearest neighbor: {distance}")
+LRN_exp3_050 = np.array([
+6.737E-05,
+6.675E-05,
+6.588E-05,
+6.621E-05
+])
+
+LRN_exp3_100 = np.array([
+6.640E-05,
+6.588E-05,
+6.489E-05,
+6.539E-05
+])
+
+Our_exp3_025 = np.array([
+6.589E-05,
+6.520E-05,
+6.457E-05,
+6.480E-05
+])
+
+Our_exp3_050 = np.array([
+6.547E-05,
+6.488E-05,
+6.426E-05,
+6.435E-05
+])
+
+Our_exp3_100 = np.array([
+6.498E-05,
+6.466E-05,
+6.400E-05,
+6.420E-05
+])
+
+# print("FCN_exp3_025: {:.2E} {:.2E}".format(np.mean(FCN_exp3_025), np.std(FCN_exp3_025)))
+# print("FCN_exp3_050: {:.2E} {:.2E}".format(np.mean(FCN_exp3_050), np.std(FCN_exp3_050)))
+# print("FCN_exp3_100: {:.2E} {:.2E}".format(np.mean(FCN_exp3_100), np.std(FCN_exp3_100)))
+# print("LRN_exp3_025: {:.2E} {:.2E}".format(np.mean(LRN_exp3_025), np.std(LRN_exp3_025)))
+# print("LRN_exp3_050: {:.2E} {:.2E}".format(np.mean(LRN_exp3_050), np.std(LRN_exp3_050)))
+# print("LRN_exp3_100: {:.2E} {:.2E}".format(np.mean(LRN_exp3_100), np.std(LRN_exp3_100)))
+print("Our_exp3_025: {:.2E} {:.2E}".format(np.mean(Our_exp3_025), np.std(Our_exp3_025)))
+print("Our_exp3_050: {:.2E} {:.2E}".format(np.mean(Our_exp3_050), np.std(Our_exp3_050)))
+print("Our_exp3_100: {:.2E} {:.2E}".format(np.mean(Our_exp3_100), np.std(Our_exp3_100)))

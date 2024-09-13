@@ -26,19 +26,19 @@ def get_grid(dataset_num, grid_size):
     x_min = np.min(x_np, axis=0)
     x_max = np.max(x_np, axis=0)
     
-    dim_min = np.array([-4.5, -4.5]).astype(config.np_dtype)
-    dim_max = np.array([4.5, 4.5]).astype(config.np_dtype)
+    dim_min = np.array([-3.0, -3.0]).astype(config.np_dtype)
+    dim_max = np.array([3.0, 3.0]).astype(config.np_dtype)
 
     assert np.all(x_max >= dim_max)
     assert np.all(x_min <= dim_min)
 
-    dim1_bins = np.arange(dim_min[0], dim_max[0], grid_size)
-    dim2_bins = np.arange(dim_min[1], dim_max[1], grid_size)
+    dim1_bins = np.arange(dim_min[0], dim_max[0] + grid_size, grid_size)
+    dim2_bins = np.arange(dim_min[1], dim_max[1] + grid_size, grid_size)
 
     selected_cells = []  # Temporary list to store the batch of selected cells
     file_counter = 0     # Counter to track the number of files
     grid_counter = 0
-    batch_size = int(2500000/2**x_np.shape[1])
+    batch_size = int(2500000/(2**x_np.shape[1]*x_np.shape[1]))
 
     print("==> Preparing to save the selected grid cells in multiple pickle files")
     for i, j in itertools.product(range(len(dim1_bins) - 1), range(len(dim2_bins) - 1)):
@@ -54,7 +54,7 @@ def get_grid(dataset_num, grid_size):
 
         if len(selected_cells) >= batch_size:
             file_counter += 1  # Increment the file counter
-            file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}_new.pkl".format(dataset_folder, grid_size, file_counter)
+            file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}.pkl".format(dataset_folder, grid_size, file_counter)
             with open(file_path, 'wb') as f:
                 pickle.dump(np.array(selected_cells), f)
             selected_cells.clear()  # Clear the batch after saving
@@ -64,7 +64,7 @@ def get_grid(dataset_num, grid_size):
     # Save any remaining cells after the loop
     if len(selected_cells) > 0:
         file_counter += 1  # Increment the file counter
-        file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}_new.pkl".format(dataset_folder, grid_size, file_counter)
+        file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}.pkl".format(dataset_folder, grid_size, file_counter)
         with open(file_path, 'wb') as f:
             pickle.dump(np.array(selected_cells), f)
         selected_cells.clear()  # Clear the remaining batch
@@ -88,7 +88,7 @@ def draw_grid(dataset_num, grid_size):
     rect_dim1_dim2 = []
     file_counter = 1
     while True:
-        file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}_new.pkl".format(dataset_folder, grid_size, file_counter)
+        file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}.pkl".format(dataset_folder, grid_size, file_counter)
         if not os.path.exists(file_path):
             break
         with open(file_path, 'rb') as f:
@@ -122,7 +122,7 @@ def draw_grid(dataset_num, grid_size):
 
     # Display the plot
     plt.legend()
-    plt.savefig("{}/00_grid_size_{:.2f}_new.png".format(dataset_folder, grid_size))
+    plt.savefig("{}/00_grid_size_{:.2f}.png".format(dataset_folder, grid_size))
 
 if __name__ == "__main__":
     dataset_num = 1

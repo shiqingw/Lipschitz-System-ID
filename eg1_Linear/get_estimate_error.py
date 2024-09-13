@@ -69,6 +69,10 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, kd_tree, dataset_folde
     x_dot_pred = model(x_torch).cpu().detach().numpy() + nominal_system(x_torch, u_torch)[:,selected_indices].cpu().detach().numpy()
     pred_error = np.linalg.norm(x_dot_pred-x_dot, 2, axis=1)
 
+    # keep_ind = np.where((x[:,0] >= -4.0) & (x[:,0] <= 4.0) & (x[:,1] >= -4.0) & (x[:,1] <= 4.0))[0]
+    # print(np.max(pred_error[keep_ind]))
+    # assert False
+
     data = {}
 
     # global lipschitz error
@@ -84,7 +88,7 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, kd_tree, dataset_folde
         file_counter = 1
         time_start = time.time()
         while True:
-            file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}_new.pkl".format(dataset_folder, grid_size, file_counter)
+            file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}.pkl".format(dataset_folder, grid_size, file_counter)
             if not os.path.exists(file_path):
                 break
             with open(file_path, 'rb') as f:
@@ -125,7 +129,7 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, kd_tree, dataset_folde
         file_counter = 1
         time_start = time.time()
         while True:
-            file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}_new.pkl".format(dataset_folder, grid_size, file_counter)
+            file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}.pkl".format(dataset_folder, grid_size, file_counter)
             if not os.path.exists(file_path):
                 break
             with open(file_path, 'rb') as f:
@@ -153,15 +157,13 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, kd_tree, dataset_folde
         data["lipsdp_lipschitz_error"] = lipsdp_lipschitz_error
         data["lipsdp_lipschitz_estimation_time"] = time_end - time_start
     
-    with open("{}/estimate_error_grid_size_{:.2f}_new.pkl".format(results_dir, grid_size), "wb") as f:
+    with open("{}/estimate_error_grid_size_{:.2f}.pkl".format(results_dir, grid_size), "wb") as f:
         pickle.dump(data, f)
                 
 if __name__ == "__main__":
     dataset_num = 1
-    grid_sizes = [0.5, 0.25, 0.1]
-    exp_nums = [15, 109, 110, 111] + \
-                [36, 172, 173, 174] + \
-                [65, 259, 260, 261]
+    grid_sizes = [0.1, 0.05]
+    exp_nums = [53, 54, 55, 56, 153, 154, 155, 156]
     
     dataset_folder = "{}/datasets/eg1_Linear/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
     dataset_file = "{}/dataset.mat".format(dataset_folder)

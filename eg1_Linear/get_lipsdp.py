@@ -151,8 +151,7 @@ def run_lipsdp(exp_num):
     
 
 if __name__ == '__main__':
-    # exp_nums = [19, 121, 122, 123, 29, 151, 152, 153, 36, 172, 173, 174]
-    exp_nums = [333, 334, 335, 336]
+    exp_nums = [153, 154, 155, 156]
     for exp_num in exp_nums:
         convert(exp_num)
         run_lipsdp(exp_num)

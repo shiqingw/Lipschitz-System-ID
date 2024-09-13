@@ -52,8 +52,8 @@ def diagnosis(exp_num):
     true_system_name = test_settings["true_system_name"]
     nominal_system = get_system(nominal_system_name).to(device)
     true_system = get_system(true_system_name).to(device)
-    state_space = np.array([[-5, 5],
-                            [-5, 5]], dtype=config.np_dtype)
+    state_space = np.array([[-4, 4],
+                            [-4, 4]], dtype=config.np_dtype)
 
     # Build neural network
     nn_config = test_settings["nn_config"]
@@ -91,6 +91,7 @@ def diagnosis(exp_num):
         residual + nominal_system(state, action), 
         true_system(state, action)).detach().cpu().numpy()
     Z = residual_norm.reshape(X.shape)
+    print("==> Max error:", np.max(Z))
 
     print("==> Drawing...")
     plt.rcParams['font.family'] = 'serif'
@@ -145,7 +146,7 @@ def diagnosis(exp_num):
 
 if __name__ == "__main__":
 
-    exp_nums = [15, 109, 110, 111, 36, 172, 173, 174, 65, 259, 260, 261]
+    exp_nums = [53, 54, 55, 56, 153, 154, 155, 156]
     for exp_num in exp_nums:
         diagnosis(exp_num)
         print("#############################################")
