@@ -24,14 +24,14 @@ def generate_json_script(filename, entry):
                     0.0
                 ],
                 "input_transform_to_inverse": [
-                    1.5873,
-                    1.5911,
-                    0.0853,
-                    0.1037
+                    1.5898,
+                    1.5902,
+                    0.0861,
+                    0.1054
                 ],
                 "output_transform": [
-                    0.0226, 
-                    0.0252
+                    0.0195, 
+                    0.0210
                 ],
                 "train_transform": 0,
                 "zero_at_zero": 1
@@ -55,8 +55,7 @@ def generate_json_script(filename, entry):
     with open(filename, 'w') as file:
         json.dump(data, file, indent=4)
 
-# train_ratios = [0.25, 0.5, 1.0]
-train_ratios = [1.0]
+train_ratios = [0.25, 0.5, 1.0]
 
 train_ratios.sort()
 wds = [1e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
@@ -75,7 +74,7 @@ for train_ratio in train_ratios:
                 "random_seed": random_seed
             })
 
-start = 33
+start = 97
 exp_nums = range(start, start+len(data))
 for i in range(len(data)):
     entry = data[i]

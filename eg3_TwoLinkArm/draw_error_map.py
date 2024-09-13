@@ -242,7 +242,7 @@ def diagnosis(exp_num):
     
 if __name__ == "__main__":
 
-    exp_nums = [21, 22, 23, 24, 37, 38, 39, 40]
+    exp_nums = [33, 34, 35, 36] + list(range(9, 13))
     for exp_num in exp_nums:
         diagnosis(exp_num)
         print("#############################################")

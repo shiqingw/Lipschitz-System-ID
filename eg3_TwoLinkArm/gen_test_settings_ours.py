@@ -24,14 +24,14 @@ def generate_json_script(filename, entry):
                     0.0
                 ],
                 "input_transform_to_inverse": [
-                    1.5873,
-                    1.5911,
-                    0.0853,
-                    0.1037
+                    1.5898,
+                    1.5902,
+                    0.0861,
+                    0.1054
                 ],
                 "output_transform": [
-                    0.0226, 
-                    0.0252
+                    0.0195, 
+                    0.0210
                 ],
                 "train_transform": 0,
                 "zero_at_zero": 1
@@ -55,8 +55,7 @@ def generate_json_script(filename, entry):
     with open(filename, 'w') as file:
         json.dump(data, file, indent=4)
 
-# train_ratios = [0.25, 0.5, 1.0]
-train_ratios = [1.0]
+train_ratios = [0.25, 0.5, 1.0]
 train_ratios.sort()
 gammas = [1, 2, 4, 8, 16, 32, 64, 128]
 gammas.sort()
