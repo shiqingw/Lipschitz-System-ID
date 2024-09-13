@@ -121,7 +121,7 @@ if __name__ == "__main__":
         column_data = df['Exp Num'].tolist()
         exp_nums.extend(column_data)
     
-    grid_sizes = [0.5, 0.25, 0.1]
+    grid_sizes = [0.1, 0.05]
 
     # save to a txt file with separator that can be directly copy pasted to excel
     with open("text.txt", "w") as file:

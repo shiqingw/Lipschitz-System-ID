@@ -51,8 +51,8 @@ def diagnosis(exp_num):
     true_system_name = test_settings["true_system_name"]
     nominal_system = get_system(nominal_system_name).to(device)
     true_system = get_system(true_system_name).to(device)
-    state_space = np.array([[-np.pi, np.pi],
-                            [-np.pi, np.pi],
+    state_space = np.array([[-np.pi/4*3, np.pi/4*3],
+                            [-np.pi/4*3, np.pi/4*3],
                             [-0.1, 0.1],
                             [-0.1, 0.1]], dtype=config.np_dtype)
 
@@ -92,11 +92,11 @@ def diagnosis(exp_num):
     state_np[:,2] = D3_flatten
     state_np[:,3] = D4_flatten
     state = torch.from_numpy(state_np).to(device)
-    residual = model(state)
     action = torch.zeros((state.shape[0], 2), dtype=config.pt_dtype).to(device)
     selected_indices = [2, 3]
+
     residual_norm = torch.nn.functional.pairwise_distance(
-        residual + nominal_system(state, action)[:,selected_indices], 
+        model(state) + nominal_system(state, action)[:,selected_indices], 
         true_system(state, action)[:,selected_indices]).detach().cpu().numpy()
     
     Z = residual_norm.reshape(D1.shape)
@@ -120,20 +120,20 @@ def diagnosis(exp_num):
     state_np = np.zeros((X_flatten.shape[0], 4), dtype=config.np_dtype)
     state_np[:,0] = X_flatten
     state_np[:,1] = Y_flatten
-    state_np[:,2] = 0.2
-    state_np[:,3] = 0.2
+    state_np[:,2] = 0.0
+    state_np[:,3] = 0.0
     state = torch.from_numpy(state_np).to(device)
-    residual = model(state)
     action = torch.zeros((state.shape[0], 2), dtype=config.pt_dtype).to(device)
     selected_indices = [2, 3]
+
     residual_norm = torch.nn.functional.pairwise_distance(
-        residual + nominal_system(state, action)[:,selected_indices], 
+        model(state) + nominal_system(state, action)[:,selected_indices], 
         true_system(state, action)[:,selected_indices]).detach().cpu().numpy()
     
     Z = residual_norm.reshape(X.shape)
 
     vmin = 0
-    vmax = 0.5
+    vmax = 0.05
     surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False, vmin=vmin, vmax=vmax)
 
     # Add a color bar which maps values to colors.
@@ -188,17 +188,16 @@ def diagnosis(exp_num):
     state_np[:,2] = X_flatten
     state_np[:,3] = Y_flatten
     state = torch.from_numpy(state_np).to(device)
-    residual = model(state)
     action = torch.zeros((state.shape[0], 2), dtype=config.pt_dtype).to(device)
     selected_indices = [2, 3]
     residual_norm = torch.nn.functional.pairwise_distance(
-        residual + nominal_system(state, action)[:,selected_indices], 
+        model(state) + nominal_system(state, action)[:,selected_indices], 
         true_system(state, action)[:,selected_indices]).detach().cpu().numpy()
     
     Z = residual_norm.reshape(X.shape)
 
     vmin = 0
-    vmax = 0.5
+    vmax = 0.05
     surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False, vmin=vmin, vmax=vmax)
 
     # Add a color bar which maps values to colors.
@@ -242,7 +241,7 @@ def diagnosis(exp_num):
     
 if __name__ == "__main__":
 
-    exp_nums = [33, 34, 35, 36] + list(range(9, 13))
+    exp_nums = [73, 74, 75, 76, 161, 162, 163, 164, 269, 270, 271, 272]
     for exp_num in exp_nums:
         diagnosis(exp_num)
         print("#############################################")
