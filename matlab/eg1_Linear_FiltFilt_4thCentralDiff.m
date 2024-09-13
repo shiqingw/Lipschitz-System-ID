@@ -26,7 +26,7 @@ var_2 = 0.0001;
 var_x = [var_1,var_2];
 
 %% Simulation settings
-t_end = 12;
+t_end = 12.2;
 sampling_freq = 100;
 tspan = linspace(0, t_end, sampling_freq*t_end+1);
 x_y_space = [-5, 5; -5, 5];
@@ -87,8 +87,8 @@ for i=1:size(initial_states,1)
 
     [b, a] = butter(2, 1e-1, 'low');
     X_processed_tmp = filtfilt(b, a, X_measured_tmp);
-    X_dot_estimated_tmp = zeros([size(T_tmp,1)-1, n_state]);
-
+    X_dot_estimated_tmp = zeros([size(T_tmp,1), n_state]);
+    
     for j=1:size(X_dot_estimated_tmp,1)
         switch j
             case 1
@@ -97,42 +97,45 @@ for i=1:size(initial_states,1)
             case 2
                 % use CENTRAL difference
                 X_dot_estimated_tmp(j,:) = (X_processed_tmp(j+1,:) - X_processed_tmp(j-1,:))*sampling_freq/2;
-            case size(X_dot_estimated_tmp,1)
+            case size(X_dot_estimated_tmp,1) - 1
                 % use CENTRAL difference
                 X_dot_estimated_tmp(j,:) = (X_processed_tmp(j+1,:) - X_processed_tmp(j-1,:))*sampling_freq/2;
+            case size(X_dot_estimated_tmp,1)
+                % use BACKWARD difference here for the last point
+                X_dot_estimated_tmp(j,:) = (X_processed_tmp(j,:) - X_processed_tmp(j-1,:))*sampling_freq;
             otherwise
-                %fourth-order central difference method
+                % fourth-order central difference method
                 X_dot_estimated_tmp(j,:) = (-X_processed_tmp(j+2,:) + 8*X_processed_tmp(j+1,:)...
                     - 8*X_processed_tmp(j-1,:) + X_processed_tmp(j-2,:))*sampling_freq/12;
         end
     end
 
     % Save the values
-    current_data_size = size(T_tmp,1)-1;
-    X_true(data_size+1:data_size+current_data_size,:) = X_true_tmp(1:current_data_size,:);
-    X_measured(data_size+1:data_size+current_data_size,:) = X_measured_tmp(1:current_data_size,:);
-    X(data_size+1:data_size+current_data_size,:) = X_processed_tmp(1:current_data_size,:);
-
-    X_dot_true(data_size+1:data_size+current_data_size,:) = X_dot_true_tmp(1:current_data_size,:);
-    X_dot(data_size+1:data_size+current_data_size,:) = X_dot_estimated_tmp(1:current_data_size,:);
-    
-    U(data_size+1:data_size+current_data_size,:) = U_tmp(1:current_data_size,:);
-    T(data_size+1:data_size+current_data_size,:) = T_tmp(1:current_data_size);
+    % Drop first 0.1 and last 0.1 second
+    keep_ind = (T_tmp >= 0.1) & (T_tmp < t_end - 0.1);
+    current_data_size = sum(keep_ind);
+    X_true(data_size+1:data_size+current_data_size,:) = X_true_tmp(keep_ind,:);
+    X(data_size+1:data_size+current_data_size,:) = X_processed_tmp(keep_ind,:);
+    X_measured(data_size+1:data_size+current_data_size,:) = X_measured_tmp(keep_ind,:);
+    X_dot_true(data_size+1:data_size+current_data_size,:) = X_dot_true_tmp(keep_ind,:);
+    X_dot(data_size+1:data_size+current_data_size,:) = X_dot_estimated_tmp(keep_ind,:);
+    U(data_size+1:data_size+current_data_size,:) = U_tmp(keep_ind,:);
+    T(data_size+1:data_size+current_data_size,:) = T_tmp(keep_ind);
     data_size = data_size + current_data_size;
 
     % Plot x and measured x
     f = figure('visible','off');
-    plot(T_tmp, X_true_tmp(:,1), '--', 'LineWidth', 1);
+    plot(T_tmp(keep_ind), X_true_tmp(keep_ind,1), '--', 'LineWidth', 1);
     hold on;
-    plot(T_tmp, X_true_tmp(:,2), '--', 'LineWidth', 1);
+    plot(T_tmp(keep_ind), X_true_tmp(keep_ind,2), '--', 'LineWidth', 1);
     hold on;
-    plot(T_tmp, X_measured_tmp(:,1), 'LineWidth', 1);
+    plot(T_tmp(keep_ind), X_measured_tmp(keep_ind,1), 'LineWidth', 1);
     hold on;
-    plot(T_tmp, X_measured_tmp(:,2), 'LineWidth', 1);
+    plot(T_tmp(keep_ind), X_measured_tmp(keep_ind,2), 'LineWidth', 1);
     hold on;
-    plot(T_tmp, X_processed_tmp(:,1), 'LineWidth', 1);
+    plot(T_tmp(keep_ind), X_processed_tmp(keep_ind,1), 'LineWidth', 1);
     hold on;
-    plot(T_tmp, X_processed_tmp(:,2), 'LineWidth', 1);
+    plot(T_tmp(keep_ind), X_processed_tmp(keep_ind,2), 'LineWidth', 1);
     legend('x','y','x_n','y_n','x_e','y_e');
     set(gcf,'Position',[100 100 1000 500]);
     plot_name = sprintf('x_%03d.png', i);
@@ -140,11 +143,11 @@ for i=1:size(initial_states,1)
     close;
 
     f = figure('visible','off');
-    plot(X_true_tmp(:,1), X_true_tmp(:,2), '--', 'LineWidth', 1);
+    plot(X_true_tmp(keep_ind,1), X_true_tmp(keep_ind,2), '--', 'LineWidth', 1);
     hold on;
-    plot(X_measured_tmp(:,1), X_measured_tmp(:,2), 'LineWidth', 1);
+    plot(X_measured_tmp(keep_ind,1), X_measured_tmp(keep_ind,2), 'LineWidth', 1);
     hold on;
-    plot(X_processed_tmp(:,1), X_processed_tmp(:,2), 'LineWidth', 1);
+    plot(X_processed_tmp(keep_ind,1), X_processed_tmp(keep_ind,2), 'LineWidth', 1);
     legend('(x,y)','(x_n,y_n)','(x_e,y_e)');
     set(gcf,'Position',[100 100 1000 500]);
     plot_name = sprintf('xy_%03d.png', i);
@@ -153,13 +156,13 @@ for i=1:size(initial_states,1)
     
     % Plot x_dot and estimated x_dot
     f = figure('visible','off');
-    plot(T_tmp, X_dot_true_tmp(:,1), '--', 'LineWidth', 1);
+    plot(T_tmp(keep_ind), X_dot_true_tmp(keep_ind,1), '--', 'LineWidth', 1);
     hold on;
-    plot(T_tmp, X_dot_true_tmp(:,2), '--', 'LineWidth', 1);
+    plot(T_tmp(keep_ind), X_dot_true_tmp(keep_ind,2), '--', 'LineWidth', 1);
     hold on;
-    plot(T_tmp(1:current_data_size), X_dot_estimated_tmp(:,1), 'LineWidth', 1);
+    plot(T_tmp(keep_ind), X_dot_estimated_tmp(keep_ind,1), 'LineWidth', 1);
     hold on;
-    plot(T_tmp(1:current_data_size), X_dot_estimated_tmp(:,2), 'LineWidth', 1);
+    plot(T_tmp(keep_ind), X_dot_estimated_tmp(keep_ind,2), 'LineWidth', 1);
     legend('dx','dy','dx_e','dy_e');
     set(gcf,'Position',[100 100 1000 500]);
     plot_name = sprintf('x_dot_%03d.png', i);
@@ -168,9 +171,19 @@ for i=1:size(initial_states,1)
     
     % Collect x-y on one figure
     f0;
-    plot(X_true_tmp(:,1), X_true_tmp(:,2), 'LineWidth', 1);
+    plot(X_true_tmp(keep_ind,1), X_true_tmp(keep_ind,2), 'LineWidth', 1);
     hold on;
 end
+
+%% Strip out extra data
+fprintf("==> Total data size %e\n", data_size);
+T = T(1:data_size);
+X = X(1:data_size,:);
+X_dot = X_dot(1:data_size,:);
+U = U(1:data_size,:);
+X_true = X_true(1:data_size,:);
+X_measured = X_measured(1:data_size,:);
+X_dot_true = X_dot_true(1:data_size,:);
 
 %% Estimation error
 error = X_dot_true - X_dot;
