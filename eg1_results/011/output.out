@@ -1,0 +1,158 @@
+==> torch device:  cuda:2
+==> Test-Train split: test_ratio = 0.20
+==> Test-Train split seed:  None
+==> Further split: further_train_ratio = 0.25
+==> Further split seed:  None
+==> Lipschitz constant: 2.00
+==> Input bias to be applied to the neural network:
+[0. 0.]
+==> Input transform to be applied to the neural network:
+[0.6513385 0.6513385]
+==> Ouput transform to be applied to the neural network:
+[3.0861 3.0861]
+==> Evaluating model...
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+NeuralNetwork                            [1, 2]                    6
+├─Sequential: 1-1                        [1, 2]                    --
+│    └─SandwichFc: 2-1                   [1, 64]                   4,353
+│    └─SandwichFc: 2-2                   [1, 64]                   8,321
+│    └─SandwichFc: 2-3                   [1, 64]                   8,321
+│    └─SandwichFc: 2-4                   [1, 64]                   8,321
+│    └─SandwichFc: 2-5                   [1, 64]                   8,321
+│    └─SandwichFc: 2-6                   [1, 64]                   8,321
+│    └─SandwichFc: 2-7                   [1, 64]                   8,321
+│    └─SandwichLin: 2-8                  [1, 2]                    135
+├─Sequential: 1-2                        [1, 2]                    (recursive)
+│    └─SandwichFc: 2-9                   [1, 64]                   (recursive)
+│    └─SandwichFc: 2-10                  [1, 64]                   (recursive)
+│    └─SandwichFc: 2-11                  [1, 64]                   (recursive)
+│    └─SandwichFc: 2-12                  [1, 64]                   (recursive)
+│    └─SandwichFc: 2-13                  [1, 64]                   (recursive)
+│    └─SandwichFc: 2-14                  [1, 64]                   (recursive)
+│    └─SandwichFc: 2-15                  [1, 64]                   (recursive)
+│    └─SandwichLin: 2-16                 [1, 2]                    (recursive)
+==========================================================================================
+Total params: 54,420
+Trainable params: 54,414
+Non-trainable params: 6
+Total mult-adds (Units.MEGABYTES): 0.11
+==========================================================================================
+Input size (MB): 0.00
+Forward/backward pass size (MB): 0.01
+Params size (MB): 0.22
+Estimated Total Size (MB): 0.22
+==========================================================================================
+==> Saving initial model weights...
+==> Start training...
+==> Number of param_groups in optimizer: 1
+Epoch: 001 | Train Loss: 19.5556666 | Grad norm: 9.577432 | Time: 3s562ms
+Epoch: 001 | Test Loss: 18.7943533 | Time: 488ms
+==> Save the model at epoch 001 with test loss 18.7943533
+Epoch: 002 | Train Loss: 8.4446404 | Grad norm: 15.073418 | Time: 3s563ms
+Epoch: 002 | Test Loss: 0.2479838 | Time: 478ms
+==> Save the model at epoch 002 with test loss 0.2479838
+Epoch: 003 | Train Loss: 0.0915830 | Grad norm: 4.538171 | Time: 3s474ms
+Epoch: 003 | Test Loss: 0.0495391 | Time: 488ms
+==> Save the model at epoch 003 with test loss 0.0495391
+Epoch: 004 | Train Loss: 0.0506581 | Grad norm: 7.700171 | Time: 3s261ms
+Epoch: 004 | Test Loss: 0.0513280 | Time: 545ms
+Epoch: 005 | Train Loss: 0.0441942 | Grad norm: 7.981812 | Time: 3s509ms
+Epoch: 005 | Test Loss: 0.0462557 | Time: 491ms
+==> Save the model at epoch 005 with test loss 0.0462557
+Epoch: 006 | Train Loss: 0.0267826 | Grad norm: 6.107636 | Time: 3s534ms
+Epoch: 006 | Test Loss: 0.0086983 | Time: 484ms
+==> Save the model at epoch 006 with test loss 0.0086983
+Epoch: 007 | Train Loss: 0.0733828 | Grad norm: 11.038803 | Time: 3s296ms
+Epoch: 007 | Test Loss: 0.0263326 | Time: 471ms
+Epoch: 008 | Train Loss: 0.1009213 | Grad norm: 14.501367 | Time: 3s428ms
+Epoch: 008 | Test Loss: 0.1047771 | Time: 475ms
+Epoch: 009 | Train Loss: 0.1180215 | Grad norm: 15.179069 | Time: 3s444ms
+Epoch: 009 | Test Loss: 0.1865118 | Time: 480ms
+Epoch: 010 | Train Loss: 0.1014860 | Grad norm: 14.019529 | Time: 3s452ms
+Epoch: 010 | Test Loss: 0.0476445 | Time: 478ms
+Epoch: 011 | Train Loss: 0.0935729 | Grad norm: 12.890654 | Time: 3s661ms
+Epoch: 011 | Test Loss: 0.0764601 | Time: 478ms
+Epoch: 012 | Train Loss: 0.0830362 | Grad norm: 12.236091 | Time: 3s565ms
+Epoch: 012 | Test Loss: 0.1268370 | Time: 473ms
+Epoch: 013 | Train Loss: 0.0726066 | Grad norm: 11.305700 | Time: 3s414ms
+Epoch: 013 | Test Loss: 0.0228694 | Time: 541ms
+Epoch: 014 | Train Loss: 0.0660200 | Grad norm: 10.596132 | Time: 3s613ms
+Epoch: 014 | Test Loss: 0.0405245 | Time: 476ms
+Epoch: 015 | Train Loss: 0.0618582 | Grad norm: 10.064518 | Time: 3s412ms
+Epoch: 015 | Test Loss: 0.1031765 | Time: 477ms
+Epoch: 016 | Train Loss: 0.0511709 | Grad norm: 9.277395 | Time: 3s525ms
+Epoch: 016 | Test Loss: 0.0260848 | Time: 481ms
+Epoch: 017 | Train Loss: 0.0475574 | Grad norm: 8.569771 | Time: 3s645ms
+Epoch: 017 | Test Loss: 0.0400797 | Time: 473ms
+Epoch: 018 | Train Loss: 0.0412736 | Grad norm: 8.056374 | Time: 3s516ms
+Epoch: 018 | Test Loss: 0.0701518 | Time: 537ms
+Epoch: 019 | Train Loss: 0.0353812 | Grad norm: 7.452024 | Time: 3s525ms
+Epoch: 019 | Test Loss: 0.0185295 | Time: 477ms
+Epoch: 020 | Train Loss: 0.0324044 | Grad norm: 6.933768 | Time: 3s513ms
+Epoch: 020 | Test Loss: 0.0203541 | Time: 477ms
+Epoch: 021 | Train Loss: 0.0271849 | Grad norm: 6.426901 | Time: 3s452ms
+Epoch: 021 | Test Loss: 0.0371933 | Time: 476ms
+Epoch: 022 | Train Loss: 0.0230821 | Grad norm: 5.836173 | Time: 3s328ms
+Epoch: 022 | Test Loss: 0.0098528 | Time: 475ms
+Epoch: 023 | Train Loss: 0.0197175 | Grad norm: 5.377859 | Time: 3s502ms
+Epoch: 023 | Test Loss: 0.0156305 | Time: 473ms
+Epoch: 024 | Train Loss: 0.0160787 | Grad norm: 4.819585 | Time: 3s308ms
+Epoch: 024 | Test Loss: 0.0311100 | Time: 471ms
+Epoch: 025 | Train Loss: 0.0134706 | Grad norm: 4.351132 | Time: 3s418ms
+Epoch: 025 | Test Loss: 0.0044922 | Time: 486ms
+==> Save the model at epoch 025 with test loss 0.0044922
+Epoch: 026 | Train Loss: 0.0066504 | Grad norm: 2.540517 | Time: 3s344ms
+Epoch: 026 | Test Loss: 0.0050583 | Time: 473ms
+Epoch: 027 | Train Loss: 0.0041398 | Grad norm: 1.854505 | Time: 3s402ms
+Epoch: 027 | Test Loss: 0.0055702 | Time: 476ms
+Epoch: 028 | Train Loss: 0.0034232 | Grad norm: 1.713099 | Time: 3s241ms
+Epoch: 028 | Test Loss: 0.0027996 | Time: 473ms
+==> Save the model at epoch 028 with test loss 0.0027996
+Epoch: 029 | Train Loss: 0.0023117 | Grad norm: 1.497293 | Time: 3s184ms
+Epoch: 029 | Test Loss: 0.0019420 | Time: 487ms
+==> Save the model at epoch 029 with test loss 0.0019420
+Epoch: 030 | Train Loss: 0.0009837 | Grad norm: 0.455194 | Time: 3s380ms
+Epoch: 030 | Test Loss: 0.0007340 | Time: 481ms
+==> Save the model at epoch 030 with test loss 0.0007340
+Epoch: 031 | Train Loss: 0.0008532 | Grad norm: 0.329166 | Time: 3s388ms
+Epoch: 031 | Test Loss: 0.0008398 | Time: 478ms
+Epoch: 032 | Train Loss: 0.0008251 | Grad norm: 0.336643 | Time: 3s258ms
+Epoch: 032 | Test Loss: 0.0007689 | Time: 557ms
+Epoch: 033 | Train Loss: 0.0007555 | Grad norm: 0.268058 | Time: 3s402ms
+Epoch: 033 | Test Loss: 0.0007243 | Time: 477ms
+==> Save the model at epoch 033 with test loss 0.0007243
+Epoch: 034 | Train Loss: 0.0007056 | Grad norm: 0.210616 | Time: 3s402ms
+Epoch: 034 | Test Loss: 0.0006641 | Time: 485ms
+==> Save the model at epoch 034 with test loss 0.0006641
+Epoch: 035 | Train Loss: 0.0006943 | Grad norm: 0.207880 | Time: 3s325ms
+Epoch: 035 | Test Loss: 0.0006632 | Time: 473ms
+==> Save the model at epoch 035 with test loss 0.0006632
+Epoch: 036 | Train Loss: 0.0006564 | Grad norm: 0.133495 | Time: 3s205ms
+Epoch: 036 | Test Loss: 0.0006613 | Time: 471ms
+==> Save the model at epoch 036 with test loss 0.0006613
+Epoch: 037 | Train Loss: 0.0006470 | Grad norm: 0.119580 | Time: 3s353ms
+Epoch: 037 | Test Loss: 0.0006486 | Time: 476ms
+==> Save the model at epoch 037 with test loss 0.0006486
+Epoch: 038 | Train Loss: 0.0006441 | Grad norm: 0.130184 | Time: 3s354ms
+Epoch: 038 | Test Loss: 0.0006428 | Time: 474ms
+==> Save the model at epoch 038 with test loss 0.0006428
+Epoch: 039 | Train Loss: 0.0006329 | Grad norm: 0.088687 | Time: 3s276ms
+Epoch: 039 | Test Loss: 0.0006438 | Time: 482ms
+Epoch: 040 | Train Loss: 0.0006325 | Grad norm: 0.084500 | Time: 3s791ms
+Epoch: 040 | Test Loss: 0.0006405 | Time: 482ms
+==> Save the model at epoch 040 with test loss 0.0006405
+Total time: 2m36s
+==> Saving trained model weights...
+==> Input bias to be applied to the neural network (trained):
+[0. 0.]
+==> Input transform to be applied to the neural network (trained):
+[0.6513385 0.6513385]
+==> Output transform to be applied to the neural network (trained):
+[3.0861 3.0861]
+==> Saving training info...
+==> Drawing training loss...
+==> Drawing grad norm...
+==> Drawing testing loss...
+==> Process finished.
