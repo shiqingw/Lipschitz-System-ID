@@ -26,7 +26,7 @@ var_2 = 5e-5;
 var_x = [var_1,var_2];
 
 %% Simulation settings
-t_end = 13.3;
+t_end = 12.3;
 sampling_freq = 100;
 tspan = linspace(0, t_end, sampling_freq*t_end+1);
 x_y_space = [-5, 5; -5, 5];

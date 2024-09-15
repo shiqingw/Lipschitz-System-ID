@@ -72,7 +72,8 @@ def global_lipschitz(exp_num):
         pickle.dump(data, f)
                 
 if __name__ == "__main__":
-    for exp_num in range(1, 169):
+    exp_nums = list(range(49, 73)) + list(range(137, 169))
+    for exp_num in exp_nums:
         global_lipschitz(exp_num)
         print("##############################################")
 
