@@ -19,7 +19,7 @@ from cores.utils.draw_utils import draw_curve
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--exp_num', default=49, type=int, help='test case number')
+    parser.add_argument('--exp_num', default=1, type=int, help='test case number')
     parser.add_argument('--device', default="None", type=str, help='device number')
     args = parser.parse_args()
 
