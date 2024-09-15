@@ -163,7 +163,7 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, kd_tree, dataset_folde
 if __name__ == "__main__":
     dataset_num = 1
     grid_sizes = [0.1, 0.05]
-    exp_nums = [53, 54, 55, 56, 137, 138, 139, 140]
+    exp_nums = [53, 54, 55, 56, 141, 142, 143, 144]
     
     dataset_folder = "{}/datasets/eg1_Linear/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
     dataset_file = "{}/dataset.mat".format(dataset_folder)
