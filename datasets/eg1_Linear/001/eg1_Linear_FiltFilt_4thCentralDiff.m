@@ -10,8 +10,8 @@ copyfile(strcat(mfilename('fullpath'),'.m'),result_dir)
 %% Define global parameters
 n_state = 2;
 n_control = 1; % actually, there is no control
-A_sys = [-0.2, 2.0;
-        -2.0, -0.2];
+A_sys = [-0.15, 2.0;
+        -2.0, -0.15];
 mu_noise = [0, 0];
 sigma_noise = 0*eye(n_state);
 try chol(sigma_noise, 'upper')
@@ -26,11 +26,11 @@ var_2 = 5e-5;
 var_x = [var_1,var_2];
 
 %% Simulation settings
-t_end = 10.3;
+t_end = 12.3;
 sampling_freq = 100;
 tspan = linspace(0, t_end, sampling_freq*t_end+1);
 x_y_space = [-5, 5; -5, 5];
-points_per_dim = [10, 10];
+points_per_dim = [11, 11];
 x1 = linspace(x_y_space(1,1), x_y_space(1,2), points_per_dim(1));
 x2 = linspace(x_y_space(2,1), x_y_space(2,2), points_per_dim(2));
 [X1,X2] = ndgrid(x1,x2);
