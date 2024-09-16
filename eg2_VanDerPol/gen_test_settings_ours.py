@@ -22,12 +22,12 @@ def generate_json_script(filename, entry):
                     0.0
                 ],
                 "input_transform_to_inverse": [
-                    2.0127,
-                    1.9229
+                    1.9518,
+                    1.9079
                 ],
                 "output_transform": [
-                    1.9242,
-                    2.0182
+                    1.9080,
+                    1.9349
                 ],
                 "train_transform": 0,
                 "zero_at_zero": 1

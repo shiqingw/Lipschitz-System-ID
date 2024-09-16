@@ -10,30 +10,10 @@ import matplotlib
 import matplotlib.pyplot as plt
 from scipy.spatial import ConvexHull
 import pickle
+import itertools
 
-from cores.lip_nn.models import NeuralNetwork
-from cores.dynamical_systems.create_system import get_system
-from cores.utils.utils import seed_everything, get_nn_config, load_dict, load_nn_weights
 from cores.utils.config import Configuration
-from cores.dataloader.dataset_utils import DynDataset, get_test_and_training_data
-
-def polygon_area(vertices):
-    """
-    Calculate the area of a polygon using the Shoelace Theorem.
-
-    :param vertices: List of tuples (x, y) representing the vertices of the polygon.
-    :return: The area of the polygon.
-    """
-    n = len(vertices)  # Number of vertices
-    area = 0
-    
-    # Applying the Shoelace Theorem
-    for i in range(n):
-        x1, y1 = vertices[i]
-        x2, y2 = vertices[(i + 1) % n]  # The next vertex, wrap around using modulo
-        area += x1 * y2 - x2 * y1
-    
-    return abs(area) / 2
+from cores.dataloader.dataset_utils import DynDataset
 
 def get_grid(dataset_num, grid_size):
     config = Configuration()
@@ -42,62 +22,100 @@ def get_grid(dataset_num, grid_size):
     dataset_file = "{}/dataset.mat".format(dataset_folder)
     dataset = DynDataset(dataset_file, config)
 
-    x_data = []
-    x_dot_data = []
-    for i in range(len(dataset)):
-        t, x, u, x_dot = dataset[i]
-        x_data.append(x.cpu().detach().numpy())
-        x_dot_data.append(x_dot.cpu().detach().numpy())
-    x_data = np.array(x_data)
-    x_dot_data = np.array(x_dot_data)
+    x_np = dataset.x.cpu().numpy()
+    x_min = np.min(x_np, axis=0)
+    x_max = np.max(x_np, axis=0)
     
-    # Step 1: Compute the convex hull of the points
-    hull = ConvexHull(x_data)
-    hull_points = x_data[hull.vertices]  # Vertices of the convex hull
+    dim_min = np.array([-3.0, -3.0]).astype(config.np_dtype)
+    dim_max = np.array([3.0, 3.0]).astype(config.np_dtype)
 
-    # Step 2: Define the grid size
-    x_min, y_min = np.min(x_data, axis=0)
-    x_max, y_max = np.max(x_data, axis=0)
+    assert np.all(x_max >= dim_max)
+    assert np.all(x_min <= dim_min)
 
-    # Create the grid
-    x_bins = np.arange(x_min, x_max + grid_size, grid_size)
-    y_bins = np.arange(y_min, y_max + grid_size, grid_size)
+    dim1_bins = np.arange(dim_min[0], dim_max[0] + grid_size, grid_size)
+    dim2_bins = np.arange(dim_min[1], dim_max[1] + grid_size, grid_size)
 
-    # Step 3: Check if grid cells overlap with the convex hull
-    # Create a path object for the convex hull
-    hull_path = matplotlib.path.Path(hull_points)
+    selected_cells = []  # Temporary list to store the batch of selected cells
+    file_counter = 0     # Counter to track the number of files
+    grid_counter = 0
+    batch_size = int(2500000/(2**x_np.shape[1]*x_np.shape[1]))
 
-    # List to store the grid cells that overlap with the convex hull
-    selected_cells = []
+    print("==> Preparing to save the selected grid cells in multiple pickle files")
+    for i, j in itertools.product(range(len(dim1_bins) - 1), range(len(dim2_bins) - 1)):
+        # Define the corners of the grid cell
+        grid_cell = np.array([
+            [dim1_bins[i], dim2_bins[j]],
+            [dim1_bins[i+1], dim2_bins[j]],
+            [dim1_bins[i+1], dim2_bins[j+1]],
+            [dim1_bins[i], dim2_bins[j+1]]
+        ])
+        selected_cells.append(grid_cell)
+        grid_counter += 1
 
-    for i in range(len(x_bins) - 1):
-        for j in range(len(y_bins) - 1):
-            # Define the corners of the grid cell
-            grid_cell = np.array([
-                [x_bins[i], y_bins[j]],
-                [x_bins[i+1], y_bins[j]],
-                [x_bins[i+1], y_bins[j+1]],
-                [x_bins[i], y_bins[j+1]]
-            ])
-            # Check if any corner of the grid cell is inside the convex hull
-            if hull_path.intersects_path(matplotlib.path.Path(grid_cell)):
-                selected_cells.append(grid_cell)
+        if len(selected_cells) >= batch_size:
+            file_counter += 1  # Increment the file counter
+            file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}.pkl".format(dataset_folder, grid_size, file_counter)
+            with open(file_path, 'wb') as f:
+                pickle.dump(np.array(selected_cells), f)
+            selected_cells.clear()  # Clear the batch after saving
 
-    # Step 4: Visualize the points, the convex hull, and the selected grid cells
+            print("==> Saved {} bacthes of selected grid cells".format(file_counter))
+    
+    # Save any remaining cells after the loop
+    if len(selected_cells) > 0:
+        file_counter += 1  # Increment the file counter
+        file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}.pkl".format(dataset_folder, grid_size, file_counter)
+        with open(file_path, 'wb') as f:
+            pickle.dump(np.array(selected_cells), f)
+        selected_cells.clear()  # Clear the remaining batch
+
+        print("==> Saved {} bacthes of selected grid cells".format(file_counter))
+
+    print("==> Total number of selected grid cells: {}".format(grid_counter))
+    print("==> Total number of files saved: {}".format(file_counter))
+    
+    print("==> Completed saving all selected grid cells in multiple files.")
+
+def draw_grid(dataset_num, grid_size):
+    print("==> Drawing the grid cells on the dataset")
+    config = Configuration()
+    
+    dataset_folder = "{}/datasets/eg2_VanDerPol/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
+    dataset_file = "{}/dataset.mat".format(dataset_folder)
+    dataset = DynDataset(dataset_file, config)
+    x_np = dataset.x.cpu().numpy()
+
+    rect_dim1_dim2 = []
+    file_counter = 1
+    while True:
+        file_path = "{}/00_selected_cells_grid_size_{:.2f}_batch_{:03d}.pkl".format(dataset_folder, grid_size, file_counter)
+        if not os.path.exists(file_path):
+            break
+        with open(file_path, 'rb') as f:
+            selected_cells = pickle.load(f)
+        file_counter += 1
+        for cell in selected_cells:
+            min1, min2 = np.min(cell, axis=0)
+            max1, max2 = np.max(cell, axis=0)
+            rect_dim1_dim2.append(np.array([[min1, min2], [max1, min2], [max1, max2], [min1, max2]]))
+        rect_dim1_dim2 = np.array(rect_dim1_dim2)
+        rect_dim1_dim2 = np.unique(rect_dim1_dim2, axis=0)
+        rect_dim1_dim2 = list(rect_dim1_dim2)
+    print("==> Finished loading the selected grid cells from {} files".format(file_counter - 1))
+    
     fig, ax = plt.subplots()
 
     # Plot the 2D points
-    ax.scatter(x_data[:, 0], x_data[:, 1], color='blue', label='2D Points', s=1)
+    ax.scatter(x_np[:, 0], x_np[:, 1], color='blue', label='2D Points', s=1)
 
     # Plot the grid cells that overlap with the convex hull
-    for cell in selected_cells:
+    for cell in rect_dim1_dim2:
         rect = plt.Polygon(cell, edgecolor='r', facecolor='none', linewidth=1)
         ax.add_patch(rect)
-        # print(polygon_area(cell))
 
     # Set labels and title
-    ax.set_xlabel('x1')
-    ax.set_ylabel('x2')
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
     
     # Set the aspect of the plot to be equal
     ax.set_aspect('equal', adjustable='box')
@@ -106,12 +124,8 @@ def get_grid(dataset_num, grid_size):
     plt.legend()
     plt.savefig("{}/00_grid_size_{:.2f}.png".format(dataset_folder, grid_size))
 
-    # Save the selected cells to a pickle file
-    with open("{}/00_selected_cells_grid_size_{:.2f}.pkl".format(dataset_folder, grid_size), 'wb') as f:
-        pickle.dump(np.array(selected_cells), f)
-
-
 if __name__ == "__main__":
     dataset_num = 1
-    grid_size = 0.1
+    grid_size = 0.05
     get_grid(dataset_num, grid_size)
+    draw_grid(dataset_num, grid_size)
