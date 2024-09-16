@@ -52,8 +52,8 @@ def diagnosis(exp_num):
     true_system_name = test_settings["true_system_name"]
     nominal_system = get_system(nominal_system_name).to(device)
     true_system = get_system(true_system_name).to(device)
-    state_space = np.array([[-4, 4],
-                            [-4, 4]], dtype=config.np_dtype)
+    state_space = np.array([[-3, 3],
+                            [-3, 3]], dtype=config.np_dtype)
 
     # Build neural network
     nn_config = test_settings["nn_config"]
@@ -74,7 +74,7 @@ def diagnosis(exp_num):
     model.eval()
 
     #############################################
-    N = 100
+    N = 50
     x= np.linspace(state_space[0,0], state_space[0,1], N)
     y = np.linspace(state_space[1,0], state_space[1,1], N)
     X, Y = np.meshgrid(x, y)
@@ -101,7 +101,7 @@ def diagnosis(exp_num):
     fig, ax = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(8, 6))
 
     vmin = 0
-    vmax = 0.5
+    vmax = 0.1
     surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False, vmin=vmin, vmax=vmax)
 
     # Add a color bar which maps values to colors.
@@ -146,7 +146,7 @@ def diagnosis(exp_num):
 
 if __name__ == "__main__":
 
-    exp_nums = [53, 54, 55, 56, 153, 154, 155, 156]
+    exp_nums = [53, 54, 55, 56, 137, 138, 139, 140, 257, 258, 259, 260]
     for exp_num in exp_nums:
         diagnosis(exp_num)
         print("#############################################")
