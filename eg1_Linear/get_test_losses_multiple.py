@@ -92,7 +92,7 @@ def diagnosis(exp_num):
 if __name__ == "__main__":
     # save to a txt file with separator that can be directly copy pasted to excel-
     with open("text.txt", "w") as file:
-        exp_nums = [53,54,55,56] + list(range(137, 169))
+        exp_nums = list(range(1, 265))
         for exp_num in exp_nums:
             out = diagnosis(exp_num)
             print("#############################################")
