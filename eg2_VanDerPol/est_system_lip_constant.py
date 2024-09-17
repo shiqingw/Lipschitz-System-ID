@@ -17,7 +17,7 @@ def diagnosis(dataset_num):
     device = config.device
     print('==> torch device: ', device)
     
-    mu = 0.03
+    mu = 0.02
     grad_f = lambda x: np.array([[0, 1.0], [-2*mu*x[0]*x[1]-1, mu*(1-x[0]**2)]])
 
     # Load dataset and get trainloader

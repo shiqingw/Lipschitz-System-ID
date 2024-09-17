@@ -10,7 +10,7 @@ copyfile(strcat(mfilename('fullpath'),'.m'),result_dir)
 %% Define global parameters
 n_state = 2;
 n_control = 1; % actually, there is no control
-mu_vdp = 0.03;
+mu_vdp = 0.02;
 mu_noise = [0, 0];
 sigma_noise = 0*eye(n_state);
 try chol(sigma_noise, 'upper')
@@ -20,8 +20,8 @@ catch ME
 end
 
 %% Gaussian noise variances
-var_1 = 1e-5;
-var_2 = 1e-5;
+var_1 = 5e-5;
+var_2 = 5e-5;
 var_x = [var_1,var_2];
 
 %% Simulation settings
@@ -29,18 +29,23 @@ t_end = 5.3;
 sampling_freq = 100;
 tspan = linspace(0, t_end, sampling_freq*t_end+1);
 x_y_space = [-4, 4; -4, 4];
-N_coarse = 7;
-N_fine = 8;
+n1 = 3;
+n2 = 4;
+n3 = 10;
 
-x1_coarse_left = linspace(x_y_space(1,1), -1, N_coarse);
-x1_coarse_right = linspace(1, x_y_space(1,2), N_coarse);
-x1_fine = linspace(-1, 1, N_fine);
-x1 = [x1_coarse_left(1:end-1), x1_fine(1:end-1), x1_coarse_right];
+x1_1 = linspace(x_y_space(1,1), -2, n1);
+x1_2 = linspace(-2, -1, n2);
+x1_3 = linspace(-1, 1, n3);
+x1_4 = linspace(1, 2, n2);
+x1_5 = linspace(2, x_y_space(1,2), n1);
+x1 = [x1_1(1:end-1), x1_2(1:end-1), x1_3(1:end-1), x1_4(1:end-1), x1_5];
 
-x2_coarse_left = linspace(x_y_space(2,1), -1, N_coarse);
-x2_coarse_right = linspace(1, x_y_space(2,2), N_coarse);
-x2_fine = linspace(-1, 1, N_fine);
-x2 = [x2_coarse_left(1:end-1), x2_fine(1:end-1), x2_coarse_right];
+x2_1 = linspace(x_y_space(2,1), -2, n1);
+x2_2 = linspace(-2, -1, n2);
+x2_3 = linspace(-1, 1, n3);
+x2_4 = linspace(1, 2, n2);
+x2_5 = linspace(2, x_y_space(2,2), n1);
+x2 = [x2_1(1:end-1), x2_2(1:end-1), x2_3(1:end-1), x2_4(1:end-1), x2_5];
 
 [X1,X2] = ndgrid(x1,x2);
 initial_states = zeros(size(x1,2)*size(x2,2),n_state);
