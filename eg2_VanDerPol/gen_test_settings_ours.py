@@ -22,12 +22,12 @@ def generate_json_script(filename, entry):
                     0.0
                 ],
                 "input_transform_to_inverse": [
-                    1.9518,
-                    1.9079
+                    2.0827, 
+                    2.0663
                 ],
                 "output_transform": [
-                    1.9080,
-                    1.9349
+                    2.0663,
+                    2.0805
                 ],
                 "train_transform": 0,
                 "zero_at_zero": 1
@@ -53,7 +53,7 @@ def generate_json_script(filename, entry):
 
 train_ratios = [0.25, 0.5, 1.0]
 train_ratios.sort()
-gammas = [1, 2, 4, 8, 16, 32, 64, 128]
+gammas = [0.5, 1, 2, 4, 8, 16]
 gammas.sort()
 random_seeds = [0, 100, 200, 300]
 random_seeds.sort()

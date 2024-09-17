@@ -10,7 +10,7 @@ copyfile(strcat(mfilename('fullpath'),'.m'),result_dir)
 %% Define global parameters
 n_state = 2;
 n_control = 1; % actually, there is no control
-mu_vdp = 0.1;
+mu_vdp = 0.03;
 mu_noise = [0, 0];
 sigma_noise = 0*eye(n_state);
 try chol(sigma_noise, 'upper')
@@ -25,15 +25,25 @@ var_2 = 1e-5;
 var_x = [var_1,var_2];
 
 %% Simulation settings
-t_end = 6.3;
+t_end = 5.3;
 sampling_freq = 100;
 tspan = linspace(0, t_end, sampling_freq*t_end+1);
 x_y_space = [-4, 4; -4, 4];
-points_per_dim = [15, 15];
-x1 = linspace(x_y_space(1,1), x_y_space(1,2), points_per_dim(1));
-x2 = linspace(x_y_space(2,1), x_y_space(2,2), points_per_dim(2));
+N_coarse = 7;
+N_fine = 8;
+
+x1_coarse_left = linspace(x_y_space(1,1), -1, N_coarse);
+x1_coarse_right = linspace(1, x_y_space(1,2), N_coarse);
+x1_fine = linspace(-1, 1, N_fine);
+x1 = [x1_coarse_left(1:end-1), x1_fine(1:end-1), x1_coarse_right];
+
+x2_coarse_left = linspace(x_y_space(2,1), -1, N_coarse);
+x2_coarse_right = linspace(1, x_y_space(2,2), N_coarse);
+x2_fine = linspace(-1, 1, N_fine);
+x2 = [x2_coarse_left(1:end-1), x2_fine(1:end-1), x2_coarse_right];
+
 [X1,X2] = ndgrid(x1,x2);
-initial_states = zeros(prod(points_per_dim),n_state);
+initial_states = zeros(size(x1,2)*size(x2,2),n_state);
 initial_states(:,1) = reshape(X1,[],1);
 initial_states(:,2) = reshape(X2,[],1);
 

@@ -22,12 +22,12 @@ def generate_json_script(filename, entry):
                     0.0
                 ],
                 "input_transform_to_inverse": [
-                    1.9518,
-                    1.9079
+                    2.0827, 
+                    2.0663
                 ],
                 "output_transform": [
-                    1.9080,
-                    1.9349
+                    2.0663,
+                    2.0805
                 ],
                 "train_transform": 0,
                 "zero_at_zero": 1
@@ -69,7 +69,8 @@ for train_ratio in train_ratios:
                 "random_seed": random_seed
             })
 
-start = 97
+start = 73
+
 exp_nums = range(start, start+len(data))
 for i in range(len(data)):
     entry = data[i]

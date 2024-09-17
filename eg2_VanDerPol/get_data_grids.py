@@ -26,8 +26,8 @@ def get_grid(dataset_num, grid_size):
     x_min = np.min(x_np, axis=0)
     x_max = np.max(x_np, axis=0)
     
-    dim_min = np.array([-3.0, -3.0]).astype(config.np_dtype)
-    dim_max = np.array([3.0, 3.0]).astype(config.np_dtype)
+    dim_min = np.array([-2.5, -2.5]).astype(config.np_dtype)
+    dim_max = np.array([2.5, 2.5]).astype(config.np_dtype)
 
     assert np.all(x_max >= dim_max)
     assert np.all(x_min <= dim_min)

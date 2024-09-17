@@ -26,7 +26,7 @@ def find_points_in_or_near_cell(cell, kd_tree, grid_size):
         _, indices_point_to_cell = kd_tree.query(cell_center, k = 10, p=2)
     return indices_point_in_cell, indices_point_to_cell
 
-def estimate_error(exp_num, system_lipschitz, dataset, x, selected_cells, grid_size):
+def estimate_error(exp_num, system_lipschitz, dataset, x, kd_tree, dataset_folder, grid_size):
     print("==> Exp Num:", exp_num)
     results_dir = "{}/eg2_results/{:03d}".format(str(Path(__file__).parent.parent), exp_num)
     if not os.path.exists(results_dir):
@@ -163,7 +163,8 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, selected_cells, grid_s
 if __name__ == "__main__":
     dataset_num = 1
     grid_sizes = [0.1, 0.05]
-    exp_nums = [53, 54, 55, 56, 137, 138, 139, 140, 257, 258, 259, 260]
+    # exp_nums = [77, 78, 79, 80, 161, 162, 163, 164]
+    exp_nums = [65]
     
     dataset_folder = "{}/datasets/eg2_VanDerPol/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
     dataset_file = "{}/dataset.mat".format(dataset_folder)
@@ -172,7 +173,7 @@ if __name__ == "__main__":
     x = dataset.x.cpu().detach().numpy()
     kd_tree = KDTree(x)
 
-    system_lipschitz = 6.51
+    system_lipschitz = 1.96
 
     for grid_size in grid_sizes:
 
