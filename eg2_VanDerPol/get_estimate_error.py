@@ -163,8 +163,7 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, kd_tree, dataset_folde
 if __name__ == "__main__":
     dataset_num = 1
     grid_sizes = [0.1, 0.05]
-    # exp_nums = [77, 78, 79, 80, 161, 162, 163, 164]
-    exp_nums = [65]
+    exp_nums = [57, 58, 59, 60, 61, 62, 63, 64, 145, 146, 147, 148]
     
     dataset_folder = "{}/datasets/eg2_VanDerPol/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
     dataset_file = "{}/dataset.mat".format(dataset_folder)
