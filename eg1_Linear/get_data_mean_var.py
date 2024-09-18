@@ -19,7 +19,7 @@ from cores.utils.draw_utils import draw_curve
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--exp_num', default=1, type=int, help='test case number')
+    parser.add_argument('--exp_num', default=72, type=int, help='test case number')
     parser.add_argument('--device', default="None", type=str, help='device number')
     args = parser.parse_args()
 
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     ax.set_ylabel(r"$x_2$", fontsize=labelsize)
     ax.tick_params(axis='both', which='major', labelsize=ticksize)
     # make the axis equal
-    ax.set_aspect('equal', adjustable='box')
+    # ax.set_aspect('equal', adjustable='box')
 
     # plt.legend(markerscale = 10, fontsize = labelsize, loc='upper right')
     plt.tight_layout()

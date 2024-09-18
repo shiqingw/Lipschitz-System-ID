@@ -51,9 +51,11 @@ def generate_json_script(filename, entry):
     with open(filename, 'w') as file:
         json.dump(data, file, indent=4)
 
-train_ratios = [0.25, 0.5, 1.0]
+# train_ratios = [0.25, 0.5, 1.0]
+train_ratios = [1.0]
 train_ratios.sort()
-gammas = [0.5, 1, 2, 4, 8, 16]
+# gammas = [0.5, 1, 2, 4, 8, 16]
+gammas = [0.5, 0.6, 0.72, 0.864, 1.0368, 1.24416]
 gammas.sort()
 random_seeds = [0, 100, 200, 300]
 random_seeds.sort()
@@ -69,7 +71,7 @@ for train_ratio in train_ratios:
                 "random_seed": random_seed
             })
 
-start = 1
+start = 265
 exp_nums = range(start, start+len(data))
 for i in range(len(data)):
     entry = data[i]
