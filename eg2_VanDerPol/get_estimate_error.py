@@ -163,7 +163,7 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, kd_tree, dataset_folde
 if __name__ == "__main__":
     dataset_num = 1
     grid_sizes = [0.1, 0.05]
-    exp_nums = list(range(49, 73)) + [145, 146, 147, 148] + [249, 250, 251, 252]
+    exp_nums = list(range(57, 61)) + [141, 142, 143, 144]
     
     dataset_folder = "{}/datasets/eg2_VanDerPol/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
     dataset_file = "{}/dataset.mat".format(dataset_folder)
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     x = dataset.x.cpu().detach().numpy()
     kd_tree = KDTree(x)
 
-    system_lipschitz = 1.96
+    system_lipschitz = 1.65
 
     for grid_size in grid_sizes:
 
