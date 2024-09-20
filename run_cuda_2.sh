@@ -1,7 +1,3 @@
-mkdir eg3_results/051
-python -u eg3_TwoLinkArm/train.py --exp_num 51 --device cuda:2 > eg3_results/051/output.out
-mkdir eg3_results/055
-python -u eg3_TwoLinkArm/train.py --exp_num 55 --device cuda:2 > eg3_results/055/output.out
 mkdir eg3_results/059
 python -u eg3_TwoLinkArm/train.py --exp_num 59 --device cuda:2 > eg3_results/059/output.out
 mkdir eg3_results/063

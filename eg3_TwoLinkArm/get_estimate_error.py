@@ -159,7 +159,7 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, grid_size):
 if __name__ == "__main__":
     dataset_num = 1
     grid_sizes = [0.1, 0.05]
-    exp_nums = [73, 74, 75, 76, 161, 162, 163, 164, 257, 258, 259, 260]
+    exp_nums = [61, 62, 63, 64, 137, 138, 139, 140]
     dataset_folder = "{}/datasets/eg3_TwoLinkArm/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
     dataset_file = "{}/dataset.mat".format(dataset_folder)
     config = Configuration()
@@ -168,7 +168,7 @@ if __name__ == "__main__":
     x = dataset.x.cpu().detach().numpy()
     kd_tree = KDTree(x)
 
-    system_lipschitz = 0.29
+    system_lipschitz = 0.59
 
     for grid_size in grid_sizes:
 

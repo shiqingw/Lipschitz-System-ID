@@ -32,8 +32,8 @@ if num_sine > size(predefined_freq,1)
 end
 
 %% Gaussian noise variances
-var_q = 1e-5;
-var_q_dot = 1e-5;
+var_q = 3e-5;
+var_q_dot = 3e-5;
 var_x = [var_q,var_q,var_q_dot,var_q_dot];
 
 %% Simulation settings
