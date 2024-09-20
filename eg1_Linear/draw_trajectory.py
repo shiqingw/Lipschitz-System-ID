@@ -61,64 +61,76 @@ def draw(exp_num):
 
     # Simulate the system using euler method
     print("==> Simulating...")
-    x0 = np.array([[5.0, 5.0]], dtype=config.np_dtype)
-    N = 3000
+    num_trajs = 10
+    directions = np.linspace(0, 2*np.pi, num_trajs, endpoint=False)
+    radii = np.linspace(0.5, 3.0, num_trajs)
+    N = 1500
     dt = 0.01
     T = np.arange(0, N*dt, dt)
-    X_true = np.zeros((N, state_dim), dtype=config.np_dtype)
-    X_true[0,:] = x0.squeeze()
+    X_true = np.zeros((num_trajs, N, state_dim), dtype=config.np_dtype)
+    X_trained = np.zeros((num_trajs, N, state_dim), dtype=config.np_dtype)
 
-    for i in range(1, N):
-        x = X_true[i-1,:][np.newaxis,:]
-        x = x + dt*true_system(torch.from_numpy(x).to(device), action=torch.zeros(1)).detach().cpu().numpy()
-        X_true[i,:] = x.squeeze()
+    for kk in range(num_trajs):
+        x0 = radii[kk] * np.array([np.cos(directions[kk]), np.sin(directions[kk])], dtype=config.np_dtype)
 
-    X_trained = np.zeros((N, state_dim), dtype=config.np_dtype)
-    X_trained[0,:] = x0.squeeze()
-    for i in range(1, N):
-        x = X_trained[i-1,:][np.newaxis,:]
-        x = x + dt*(nominal_system(torch.from_numpy(x).to(device), action=None).detach().cpu().numpy() +\
-                    model(torch.from_numpy(x).to(device)).detach().cpu().numpy())
-        X_trained[i,:] = x.squeeze()
+        X_true_tmp = torch.zeros((N, state_dim), dtype=config.pt_dtype)
+        X_true_tmp[0,:] = torch.from_numpy(x0).to(device)
+        for i in range(1, N):
+            x = torch.unsqueeze(X_true_tmp[i-1,:], 0)
+            x = x + dt*true_system(x, action=torch.zeros(1)).detach().cpu()
+            X_true_tmp[i,:] = torch.squeeze(x)
+
+        X_trained_tmp = torch.zeros((N, state_dim), dtype=config.pt_dtype)
+        X_trained_tmp[0,:] = torch.from_numpy(x0).to(device)
+        for i in range(1, N):
+            x = torch.unsqueeze(X_trained_tmp[i-1,:], 0)
+            x = x + dt*(nominal_system(x, action=None).detach().cpu() +\
+                        model(x).detach().cpu())
+            X_trained_tmp[i,:] = torch.squeeze(x)
+        
+        X_true[kk,:,:] = X_true_tmp.numpy()
+        X_trained[kk,:,:] = X_trained_tmp.numpy()
     
+    print("==> Drawing...") 
     plt.rcParams['font.family'] = 'serif'
     plt.rcParams.update({"text.usetex": True,
                          "text.latex.preamble": r"\usepackage{amsmath}"})
     plt.rcParams.update({'pdf.fonttype': 42})
     
-    plt.figure()
-    plt.plot(T, X_trained[:,0], label=r"$x_1$ trained")
-    plt.plot(T, X_true[:,0], label=r"$x_1$ true", linestyle="--")
-    plt.plot(T, X_trained[:,1], label=r"$x_2$ trained")
-    plt.plot(T, X_true[:,1], label=r"$x_2$ true", linestyle="--")
-    plt.legend()
-    plt.xlabel('Time [s]')
-    plt.ylabel('State')
-    plt.savefig(os.path.join(figure_dir, "traj_wrt_t_{:03d}.pdf".format(exp_num)), bbox_inches='tight')
+    fig, ax = plt.subplots(figsize=(8, 6))
+    labelsize = 30
+    ticksize = 20
+    for kk in range(num_trajs):
+        ax.plot(T, np.linalg.norm(X_trained[kk,:,:]-X_true[kk,:,:], 2, axis=1))
+    ax.set_xlabel('Time [s]', fontsize=labelsize)
+    ax.set_ylabel(r'$\lVert x - z \rVert_2$', fontsize=labelsize)
+    ax.tick_params(axis='both', which='major', labelsize=ticksize)
+    if np.max(np.linalg.norm(X_trained-X_true, 2, axis=2)) <= 0.004:
+        ax.set_ylim([-0.001, 0.004])
+    else:
+        ax.set_ylim([-0.01, 0.04])
+    plt.grid()
+    plt.tight_layout()
+    plt.savefig(os.path.join(figure_dir, "traj_error_wrt_t_{:03d}.pdf".format(exp_num)))
     plt.close()
 
-    plt.figure()
-    plt.plot(T, np.linalg.norm(X_trained-X_true, 2, axis=1))
-    plt.legend()
-    plt.xlabel('Time [s]')
-    plt.ylabel(r'$\lVert x - z \rVert_2$')
-    plt.savefig(os.path.join(figure_dir, "error_wrt_t_{:03d}.pdf".format(exp_num)), bbox_inches='tight')
-    plt.close()
-
-    # clear figure
-    plt.clf()
-    plt.plot(X_trained[:,0], X_trained[:,1], label="trained")
-    plt.plot(X_true[:,0], X_true[:,1], label="true", linestyle="--")
-    plt.legend()
-    plt.xlabel(r'$x_1$')
-    plt.ylabel(r'$x_2$')
-    plt.axis('equal')
-    plt.savefig(os.path.join(figure_dir, "traj_wrt_x_{:03d}.pdf".format(exp_num)), bbox_inches='tight')
+    fig, ax = plt.subplots(figsize=(8, 6))
+    labelsize = 30
+    ticksize = 20
+    for kk in range(num_trajs):
+        ax.plot(X_true[kk,:,0], X_true[kk,:,1],linewidth=2)
+    ax.set_xlabel(r'$x_1$', fontsize=labelsize)
+    ax.set_ylabel(r'$x_2$', fontsize=labelsize)
+    ax.tick_params(axis='both', which='major', labelsize=ticksize)
+    plt.grid()
+    plt.tight_layout()
+    plt.savefig(os.path.join(figure_dir, "traj_true_{:03d}.pdf".format(exp_num)))
     plt.close()
 
 if __name__ == "__main__":
 
     exp_nums = [53, 54, 55, 56, 137, 138, 139, 140, 257, 258, 259, 260]
+    # exp_nums = [53]
     for exp_num in exp_nums:
         draw(exp_num)
         print("##############################################")

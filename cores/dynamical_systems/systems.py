@@ -60,7 +60,6 @@ class TwoLinkArm(nn.Module):
         # Unpack the state and action
         theta1, theta2, dtheta1, dtheta2 = torch.split(state, [1,1,1,1], dim=1)
         tau1, tau2 = torch.split(action, [1,1], dim=1)
-        theta1 = theta1 # origin shifted to the downward position
 
         # Constants for the equations
         s1 = torch.sin(theta1)
@@ -99,6 +98,57 @@ class TwoLinkArm(nn.Module):
         ddtheta = torch.linalg.solve(M, b)
         
         return torch.cat((dtheta1, dtheta2, ddtheta), dim=1)
+    
+    def mass_matrix(self, state):
+        # Unpack the state and action
+        theta1, theta2, dtheta1, dtheta2 = torch.split(state, [1,1,1,1], dim=1)
+
+        # Constants for the equations
+        c2 = torch.cos(theta2)
+
+        # Intermediate computations to simplify the equations
+        M11 = self.I_link1 + self.m_link1 * self.l1**2 + self.kr1**2 * self.I_motor1 + self.I_link2 \
+            + self.m_link2*(self.a1**2 + self.l2**2 + 2 * self.a1 * self.l2 * c2) + self.I_motor2 \
+            + self.m_motor2 * self.a1**2
+        M12 = self.I_link2 + self.m_link2 * (self.l2**2 + self.a1 * self.l2 * c2) + self.kr2 * self.I_motor2
+        M21 = M12  # M21 is symmetric to M12 (M21 == M12)
+        M22 = (self.I_link2 + self.m_link2 * self.l2**2 + self.kr2**2 * self.I_motor2)*torch.ones_like(M11)
+
+        # The inertia matrix
+        M = torch.stack((M11, M12, M21, M22), dim=1).reshape(-1, 2, 2)
+
+        return M
+    
+    def gravity_vector(self, state):
+        # Unpack the state and action
+        theta1, theta2, dtheta1, dtheta2 = torch.split(state, [1,1,1,1], dim=1)
+
+        # Constants for the equations
+        s1 = torch.sin(theta1)
+        s12 = torch.sin(theta1 + theta2)
+
+        g1 = (self.m_link1 * self.l1 + self.m_motor2 * self.a1 + self.m_link2 * self.a1) * self.g * s1 \
+            + self.m_link2 * self.l2 * self.g * s12
+        g2 = self.m_link2 * self.l2 * self.g * s12
+
+        return torch.cat((g1, g2), dim=1)
+    
+    def coriolis_vector(self, state):
+        # Unpack the state and action
+        theta1, theta2, dtheta1, dtheta2 = torch.split(state, [1,1,1,1], dim=1)
+
+        # Constants for the equations
+        s2 = torch.sin(theta2)
+
+        h = -self.m_link2 * self.a1 * self.l2 * s2
+        C11 = h * dtheta2
+        C12 = h * (dtheta1 + dtheta2)
+        C21 = -h * dtheta1
+        C22 = torch.zeros_like(C11)
+
+        return torch.cat((C11 * dtheta1 + C12 * dtheta2, C21 * dtheta1 + C22 * dtheta2), dim=1)
+
+
     
 class LotkaVolterra(nn.Module):
     def __init__(self, properties, params):

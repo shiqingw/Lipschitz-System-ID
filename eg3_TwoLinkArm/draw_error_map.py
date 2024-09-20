@@ -145,8 +145,8 @@ def diagnosis(exp_num):
 
     # Set labels for the axes
     labelsize = 30
-    ax.set_xlabel(r"$q1$", fontsize=labelsize, labelpad=10)
-    ax.set_ylabel(r"$q2$", fontsize=labelsize, labelpad=18)
+    ax.set_xlabel(r"$q_1$", fontsize=labelsize, labelpad=10)
+    ax.set_ylabel(r"$q_2$", fontsize=labelsize, labelpad=18)
     # ax.set_zlabel(r"$\lVert f(x)-\Phi(x) \rVert$", fontsize=labelsize, labelpad=20)
 
     # Set ticks
@@ -197,7 +197,7 @@ def diagnosis(exp_num):
     Z = residual_norm.reshape(X.shape)
 
     vmin = 0
-    vmax = 0.05
+    vmax = 0.1
     surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False, vmin=vmin, vmax=vmax)
 
     # Add a color bar which maps values to colors.
@@ -209,8 +209,8 @@ def diagnosis(exp_num):
 
     # Set labels for the axes
     labelsize = 30
-    ax.set_xlabel(r"$dq1$", fontsize=labelsize, labelpad=10)
-    ax.set_ylabel(r"$dq2$", fontsize=labelsize, labelpad=18)
+    ax.set_xlabel(r"$\dot{q}_1$", fontsize=labelsize, labelpad=10)
+    ax.set_ylabel(r"$\dot{q}_2$", fontsize=labelsize, labelpad=18)
     # ax.set_zlabel(r"$\lVert f(x)-\Phi(x) \rVert$", fontsize=labelsize, labelpad=20)
 
     # Set ticks

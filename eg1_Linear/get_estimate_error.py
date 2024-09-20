@@ -172,7 +172,7 @@ if __name__ == "__main__":
     x = dataset.x.cpu().detach().numpy()
     kd_tree = KDTree(x)
 
-    system_lipschitz = np.linalg.norm(np.array([[-0.15, 2.0], [-2.0, -0.15]]), 2)
+    system_lipschitz = np.linalg.norm(np.array([[-0.2, 2.0], [-2.0, -0.2]]), 2)
 
     for grid_size in grid_sizes:
 

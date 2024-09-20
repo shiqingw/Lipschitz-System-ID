@@ -6,13 +6,13 @@ sys.path.append(str(Path(__file__).parent.parent))
 import numpy as np 
 
 # draw lip fitting
-x = [1.0053, 2.0105, 4.0210, 8.0420]
-y_test = [4.000E+00, 5.403E-03, 5.400E-03, 5.394E-03]
-y_train = [4.017039065, 0.005410953, 0.005380128, 0.005375613]
+x = [1.005253077, 1.206303716, 1.447564483, 1.737077355, 2.084492922, 2.501391411]
+y_test = [4.000317403, 2.561618658, 1.257392652, 0.300309092, 0.005403201, 0.005403907]
+y_train = [4.017039065, 2.572158738, 1.262735015, 0.301797486, 0.005414135, 0.005403261]
 xlabel = r"$\gamma$"
 save_name = "00lip_fitting_train_test"
 
-system_lipschitz = np.linalg.norm(np.array([[-0.15, 2.0], [-2.0, -0.15]]), 2)
+system_lipschitz = np.linalg.norm(np.array([[-0.2, 2.0], [-2.0, -0.2]]), 2)
 
 # Draw the curve
 print("==> Drawing...")
@@ -35,7 +35,7 @@ ax.vlines(system_lipschitz, 0, max(y_train), colors="black", linestyles="dashed"
 ax.text(system_lipschitz, 0.1, r"$K \approx {:.02f}$".format(system_lipschitz), ha='left', va='center', fontsize = 30)
 ax.set_xscale("log")
 ax.set_yscale("log")
-ax.set_xlim([0.8, 10])
+ax.set_xlim([0.8, 3])
 
 labelsize = 30
 ticksize = 30
@@ -43,7 +43,7 @@ ax.set_xlabel(xlabel, fontsize=labelsize)
 # ax.set_ylabel(ylabels[0], fontsize=labelsize)
 ax.set_title(ylabels[0], fontsize=labelsize, pad=10)
 ax.tick_params(axis='both', which='major', labelsize=ticksize)
-ax.tick_params(axis='y', which='minor', labelsize=ticksize)
+ax.tick_params(axis='both', which='minor', labelsize=ticksize)
 plt.grid()
 plt.tight_layout()
 
@@ -55,13 +55,13 @@ ax.vlines(system_lipschitz, 0, max(y_test), colors="black", linestyles="dashed",
 ax.text(system_lipschitz, 0.1, r"$K \approx {:.02f}$".format(system_lipschitz), ha='left', va='center', fontsize = 30)
 ax.set_xscale("log")
 ax.set_yscale("log")
-ax.set_xlim([0.8, 10])
+ax.set_xlim([0.8, 3])
 
 ax.set_xlabel(xlabel, fontsize=labelsize)
 # ax.set_ylabel(ylabels[1], fontsize=labelsize)
 ax.set_title(ylabels[1], fontsize=labelsize, pad=10)
 ax.tick_params(axis='both', which='major', labelsize=ticksize)
-ax.tick_params(axis='y', which='minor', labelsize=ticksize)
+ax.tick_params(axis='both', which='minor', labelsize=ticksize)
 plt.grid()
 plt.tight_layout()
 
