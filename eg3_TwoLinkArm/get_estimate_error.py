@@ -159,7 +159,7 @@ def estimate_error(exp_num, system_lipschitz, dataset, x, grid_size):
 if __name__ == "__main__":
     dataset_num = 1
     grid_sizes = [0.1, 0.05]
-    exp_nums = [73, 74, 75, 76, 161, 162, 163, 164, 269, 270, 271, 272]
+    exp_nums = [73, 74, 75, 76, 161, 162, 163, 164, 257, 258, 259, 260]
     dataset_folder = "{}/datasets/eg3_TwoLinkArm/{:03d}".format(str(Path(__file__).parent.parent), dataset_num)
     dataset_file = "{}/dataset.mat".format(dataset_folder)
     config = Configuration()

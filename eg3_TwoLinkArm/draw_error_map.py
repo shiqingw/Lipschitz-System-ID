@@ -241,7 +241,7 @@ def diagnosis(exp_num):
     
 if __name__ == "__main__":
 
-    exp_nums = [73, 74, 75, 76, 161, 162, 163, 164, 269, 270, 271, 272]
+    exp_nums = [73, 74, 75, 76, 161, 162, 163, 164, 257, 258, 259, 260]
     for exp_num in exp_nums:
         diagnosis(exp_num)
         print("#############################################")

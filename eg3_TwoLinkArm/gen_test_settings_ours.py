@@ -6,8 +6,8 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 def generate_json_script(filename, entry):
     data = {
-            "nominal_system_name": "TwoLinkArm1_nominal",
-            "true_system_name": "TwoLinkArm1_true",
+            "nominal_system_name": "TwoLinkArm2_nominal",
+            "true_system_name": "TwoLinkArm2_true",
             "seed": entry["random_seed"],
             "nn_config": {
                 "in_features": 4,
@@ -24,14 +24,14 @@ def generate_json_script(filename, entry):
                     0.0
                 ],
                 "input_transform_to_inverse": [
-                    1.5898,
-                    1.5902,
-                    0.0861,
-                    0.1054
+                    1.5898, 
+                    1.5901, 
+                    0.0848, 
+                    0.1039
                 ],
                 "output_transform": [
-                    0.0251,
-                    0.0262
+                    0.0403,
+                    0.0430
                 ],
                 "train_transform": 0,
                 "zero_at_zero": 1
@@ -57,7 +57,7 @@ def generate_json_script(filename, entry):
 
 train_ratios = [0.25, 0.5, 1.0]
 train_ratios.sort()
-gammas = [1, 2, 4, 8, 16, 32, 64, 128]
+gammas = [0.5, 1, 2, 4, 8, 16]
 gammas.sort()
 random_seeds = [0, 100, 200, 300]
 random_seeds.sort()

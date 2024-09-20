@@ -9,7 +9,6 @@ sys.path.append(str(Path(__file__).parent.parent))
 import matplotlib.pyplot as plt
 
 from cores.lip_nn.models import NeuralNetwork
-from cores.dynamical_systems.create_system import get_system
 from cores.utils.utils import seed_everything, get_nn_config, load_dict, load_nn_weights
 from cores.utils.config import Configuration
 
@@ -24,7 +23,7 @@ def diagnosis(exp_num):
     results_dir = "{}/eg3_results/{:03d}".format(str(Path(__file__).parent.parent), exp_num)
     if not os.path.exists(results_dir):
         results_dir = "{}/eg3_results/{:03d}_keep".format(str(Path(__file__).parent.parent), exp_num)
-    test_settings_path = os.path.join(results_dir, "test_settings_{:03d}.json".format(exp_num))
+    test_settings_path = "{}/test_settings/test_settings_{:03d}.json".format(str(Path(__file__).parent), exp_num)
     with open(test_settings_path, "r", encoding="utf8") as f:
         test_settings = json.load(f)
 
@@ -41,13 +40,7 @@ def diagnosis(exp_num):
     seed_everything(seed)
 
     # Build dynamical system
-    nominal_system_name = test_settings["nominal_system_name"]
-    true_system_name = test_settings["true_system_name"]
-    nominal_system = get_system(nominal_system_name).to(device)
     further_train_ratio = test_settings["train_config"]["further_train_ratio"]
-    true_system = get_system(true_system_name).to(device)
-    state_dim = nominal_system.n_state
-    control_dim = nominal_system.n_control
 
     # Build neural network
     nn_config = test_settings["nn_config"]
@@ -63,36 +56,52 @@ def diagnosis(exp_num):
         model = NeuralNetwork(nn_config, input_bias=None, input_transform=None, output_transform=None, train_transform=train_transform, zero_at_zero=False)
     else:
         model = NeuralNetwork(nn_config, input_bias, input_transform, output_transform, train_transform, zero_at_zero)
-    if nn_config.layer == 'Sandwich':
-        print("==> Lipschitz constant: {:.02f}".format(nn_config.gamma))
 
-    model = load_nn_weights(model, os.path.join(results_dir, 'nn_best.pt'), device)
-    model.eval()
-
-    # Load loss dict and print the final loss
-    loss_dict = load_dict(os.path.join(results_dir, "training_info.npy"))
-    min_pos = np.argmin(loss_dict["test_loss"])
-    
-    print("==> Training loss: ", loss_dict["train_loss"][min_pos])
-    print("==> Testing loss: ", loss_dict["test_loss"][min_pos])
-
-    if nn_config.layer == 'Sandwich':
-        overall_lipschitz = nn_config.gamma
-        overall_lipschitz *= max(model.input_transform.cpu().detach().numpy())
-        overall_lipschitz *= max(model.output_transform.cpu().detach().numpy())
-
+    all_info = []
+    # Step 1
     train_config = test_settings["train_config"]
     if nn_config.layer == 'Sandwich':
-        return nn_config.gamma, overall_lipschitz, loss_dict["train_loss"][min_pos], loss_dict["test_loss"][min_pos], exp_num, further_train_ratio
+        all_info.append(nn_config.gamma)
     elif nn_config.layer == 'Plain':
-        return train_config['wd'], loss_dict["train_loss"][min_pos], loss_dict["test_loss"][min_pos], exp_num, further_train_ratio
+        all_info.append(train_config['wd'])
     elif nn_config.layer == 'Lip_Reg':
-        return train_config['lip_reg_param'], loss_dict["train_loss"][min_pos], loss_dict["test_loss"][min_pos], exp_num, further_train_ratio
+        all_info.append(train_config['lip_reg_param'])
+    else:
+        all_info.append(None)
+
+    # Step 2
+    if nn_config.layer == 'Sandwich':
+        if os.path.exists(os.path.join(results_dir, 'nn_best.pt')):
+            model = load_nn_weights(model, os.path.join(results_dir, 'nn_best.pt'), device)
+            model.eval()
+            overall_lipschitz = nn_config.gamma
+            overall_lipschitz *= max(model.input_transform.cpu().detach().numpy())
+            overall_lipschitz *= max(model.output_transform.cpu().detach().numpy())
+            all_info.append(overall_lipschitz)
+        else:
+            all_info.append(None)
+
+    # Step 3
+    # Load loss dict and print the final loss
+    if os.path.exists(os.path.join(results_dir, "training_info.npy")):
+        loss_dict = load_dict(os.path.join(results_dir, "training_info.npy"))
+        min_pos = np.argmin(loss_dict["test_loss"])
+        all_info.append(loss_dict["train_loss"][min_pos])
+        all_info.append(loss_dict["test_loss"][min_pos])
+    else:
+        all_info.append(None)
+        all_info.append(None)
+    
+    # Step 4
+    all_info.append(exp_num)
+    all_info.append(further_train_ratio)
+
+    return all_info
 
 if __name__ == "__main__":
     # save to a txt file with separator that can be directly copy pasted to excel-
     with open("text.txt", "w") as file:
-        for exp_num in range(1, 289):
+        for exp_num in range(1, 169):
             out = diagnosis(exp_num)
             print("#############################################")
             for ii in out:

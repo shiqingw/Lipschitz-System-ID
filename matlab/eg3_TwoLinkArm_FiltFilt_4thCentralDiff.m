@@ -15,7 +15,7 @@ global m_link1 m_motor1 I_link1 I_motor1 m_link2 m_motor2 I_link2 ...
 m_link1 = 20; m_motor1 = 2; I_link1 = 5; I_motor1 = 0.01; 
 m_link2 = 20; m_motor2 = 2; I_link2 = 5; I_motor2 = 0.01; 
 l1 = 0.4; l2 = 0.4; a1 = 0.8; a2 = 0.8; kr1 = 100; kr2 = 100; 
-g = 9.81;Fv1 = 20; Fv2 = 20; Fc1 = 1; Fc2 = 1; s1 = 10; s2 = 10;
+g = 9.81;Fv1 = 40; Fv2 = 40; Fc1 = 2; Fc2 = 2; s1 = 10; s2 = 10;
 Kp = 1*eye(2); Kd = 2*eye(2);
 
 num_sine = 1;

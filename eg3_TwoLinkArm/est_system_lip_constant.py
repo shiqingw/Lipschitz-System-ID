@@ -86,6 +86,7 @@ def diagnosis(exp_num):
     print("Lipschitz constant:", L)
 
 if __name__ == "__main__":
-    for exp_num in range(1, 2):
+    exp_nums = [1]
+    for exp_num in exp_nums:
         diagnosis(exp_num)
         
