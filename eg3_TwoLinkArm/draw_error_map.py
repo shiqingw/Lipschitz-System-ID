@@ -53,8 +53,8 @@ def diagnosis(exp_num):
     true_system = get_system(true_system_name).to(device)
     state_space = np.array([[-np.pi/4*3, np.pi/4*3],
                             [-np.pi/4*3, np.pi/4*3],
-                            [-0.2, 0.2],
-                            [-0.2, 0.2]], dtype=config.np_dtype)
+                            [-0.3, 0.3],
+                            [-0.3, 0.3]], dtype=config.np_dtype)
 
     # Build neural network
     nn_config = test_settings["nn_config"]

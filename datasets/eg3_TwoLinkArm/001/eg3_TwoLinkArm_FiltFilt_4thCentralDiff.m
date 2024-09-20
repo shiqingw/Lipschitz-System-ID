@@ -20,8 +20,8 @@ Kp = 1*eye(2); Kd = 2*eye(2);
 
 num_sine = 1;
 predefined_freq = [1];
-am1 = 100*ones(1,num_sine);
-am2 = 100*ones(1,num_sine);
+am1 = 200*ones(1,num_sine);
+am2 = 200*ones(1,num_sine);
 freq1 = zeros(num_sine,1);
 freq2 = zeros(num_sine,1);
 freq1(1:size(predefined_freq,2)) = predefined_freq;

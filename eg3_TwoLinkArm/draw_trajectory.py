@@ -72,7 +72,7 @@ def draw(exp_num):
     kp = 1.0
     kd = 2.0
     freq = 0.25
-    amplitude = 50.0
+    amplitude = 100.0
     np.random.seed(0)
 
     for kk in range(num_trajs):

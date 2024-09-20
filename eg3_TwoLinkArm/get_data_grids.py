@@ -177,6 +177,6 @@ def draw_grid(dataset_num, grid_size):
 
 if __name__ == "__main__":
     dataset_num = 1
-    grid_size = 0.1
+    grid_size = 0.05
     get_grid(dataset_num, grid_size)
     draw_grid(dataset_num, grid_size)
