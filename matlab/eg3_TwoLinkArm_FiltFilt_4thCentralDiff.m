@@ -32,8 +32,8 @@ if num_sine > size(predefined_freq,1)
 end
 
 %% Gaussian noise variances
-var_q = 1e-6;
-var_q_dot = 1e-6;
+var_q = 1e-5;
+var_q_dot = 1e-5;
 var_x = [var_q,var_q,var_q_dot,var_q_dot];
 
 %% Simulation settings
@@ -208,12 +208,13 @@ X_measured = X_measured(1:data_size,:);
 X_dot_true = X_dot_true(1:data_size,:);
 
 %% Estimation error
-error = X_dot_true(:,3:4) - X_dot(:,3:4);
-error_ratio = error./X_dot_true(:,3:4)*100;
-fprintf("==> L2 error: \n");
-disp(mean(error.^2, 1));
-fprintf("==> Max error percentage: \n");
-disp(max(abs(error_ratio),[],1));
+error = X_dot_true - X_dot;
+fprintf("==> Mean l2 error : \n");
+disp(mean(vecnorm(error, 2, 2)));
+fprintf("==> Max l2 error: \n");
+disp(max(vecnorm(error, 2, 2)));
+fprintf("==> Max component error: \n");
+disp(max(abs(error)));
 
 %% Save the data
 fprintf("==> Saving data...\n");

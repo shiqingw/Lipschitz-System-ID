@@ -30,8 +30,8 @@ def generate_json_script(filename, entry):
                     0.1054
                 ],
                 "output_transform": [
-                    0.0195, 
-                    0.0210
+                    0.0251,
+                    0.0262
                 ],
                 "train_transform": 0,
                 "zero_at_zero": 1
