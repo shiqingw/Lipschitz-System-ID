@@ -11,7 +11,7 @@ def generate_sh_script(filename, exp_nums, device):
             file.write(command1)
             file.write(command2)
 
-exp_nums = list(range(57, 65)) + list(range(137, 145))
+exp_nums = list(range(1, 57)) + list(range(65, 137)) + list(range(145, 265))
 devices = ["cuda:0", "cuda:1", "cuda:2", "cuda:3"]
 files = [os.path.join(str(Path(__file__).parent.parent), f"run_cuda_{i}.sh") for i in range(len(devices))]
 
