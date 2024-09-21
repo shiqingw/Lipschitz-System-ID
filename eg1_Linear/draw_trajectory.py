@@ -61,9 +61,9 @@ def draw(exp_num):
 
     # Simulate the system using euler method
     print("==> Simulating...")
-    num_trajs = 10
+    num_trajs = 20
     directions = np.linspace(0, 2*np.pi, num_trajs, endpoint=False)
-    radii = np.linspace(0.5, 3.0, num_trajs)
+    radii = np.linspace(0.1, 3.0, num_trajs)
     N = 1500
     dt = 0.01
     T = np.arange(0, N*dt, dt)

@@ -72,7 +72,7 @@ def draw(exp_num):
     kp = 1.0
     kd = 2.0
     freq = 0.25
-    amplitude = 100.0
+    amplitude = 10.0
     np.random.seed(0)
 
     for kk in range(num_trajs):
@@ -133,6 +133,7 @@ def draw(exp_num):
     ticksize = 20
     for kk in range(num_trajs):
         ax.plot(T, np.linalg.norm(X_trained[kk,:,:]-X_true[kk,:,:], 2, axis=1))
+    ax.plot(T, np.mean(np.linalg.norm(X_trained-X_true, 2, axis=2), axis=0), 'k', linestyle='--', linewidth=3)
     ax.set_xlabel('Time [s]', fontsize=labelsize)
     ax.set_ylabel(r'$\lVert x - z \rVert_2$', fontsize=labelsize)
     ax.tick_params(axis='both', which='major', labelsize=ticksize)

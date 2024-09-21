@@ -61,10 +61,11 @@ def draw(exp_num):
 
     # Simulate the system using euler method
     print("==> Simulating...")
-    num_trajs = 10
-    radii = np.linspace(0.2, 2.5, num_trajs, endpoint=False)
-    directions = np.linspace(0, 2*np.pi, num_trajs, endpoint=False)
-    N = 1500
+    num_trajs = 20
+    # radii = np.linspace(0.2, 2.5, num_trajs, endpoint=False)
+    radii = np.linspace(0.1, 2.5, num_trajs, endpoint=False)
+    directions = np.linspace(1, 2*np.pi, num_trajs, endpoint=False)
+    N = 1000
     dt = 0.01
     T = np.arange(0, N*dt, dt)
     X_true = np.zeros((num_trajs, N, state_dim), dtype=config.np_dtype)
@@ -102,6 +103,7 @@ def draw(exp_num):
     ticksize = 20
     for kk in range(num_trajs):
         ax.plot(T, np.linalg.norm(X_trained[kk,:,:]-X_true[kk,:,:], 2, axis=1))
+    ax.plot(T, np.mean(np.linalg.norm(X_trained-X_true, 2, axis=2), axis=0), 'k', linestyle='--', linewidth=3)
     ax.set_xlabel('Time [s]', fontsize=labelsize)
     ax.set_ylabel(r'$\lVert x - z \rVert_2$', fontsize=labelsize)
     ax.tick_params(axis='both', which='major', labelsize=ticksize)
