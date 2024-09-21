@@ -203,7 +203,7 @@ def draw(exp_num):
 
 if __name__ == "__main__":
 
-    exp_nums = [61, 62, 63, 64, 137, 138, 139, 140]
+    exp_nums = [61, 62, 63, 64, 137, 138, 139, 140, 233, 234, 235, 236]
     # exp_nums = [73]
     for exp_num in exp_nums:
         draw(exp_num)

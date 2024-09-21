@@ -64,7 +64,8 @@ def draw(exp_num, all_q0):
     kp = 1.0
     kd = 2.0
     freq = 0.25
-    amplitude = 100.0
+    amplitude = 30.0
+
     np.random.seed(0)
 
     for kk in range(num_trajs):
@@ -120,12 +121,12 @@ def draw(exp_num, all_q0):
 
 if __name__ == "__main__":
 
-    exp_nums = [137, 137, 63]
+    exp_nums = [138, 234, 62]
     labels = ['FCNs', 'LRNs', 'Ours']
     colors = ['tab:orange', 'tab:green', 'tab:blue']
 
     np.random.seed(0)
-    num_trajs = 20
+    num_trajs = 100
     all_q0 = np.random.uniform(-1, 1, (num_trajs, 2))
     state_bounds = np.array([3,3])
     all_q0 = all_q0 * state_bounds
@@ -158,9 +159,8 @@ if __name__ == "__main__":
         ax.plot(T, mean, 'k', linestyle='--', linewidth=3)
         ax.fill_between(T, mean-std, mean+std, color='gray', alpha=0.5)
         ax.set_xlabel('Time [s]', fontsize=labelsize)
-        ax.set_ylabel(r'$\lVert x - z \rVert_2$', fontsize=labelsize)
+        ax.set_ylabel(r'$\lVert z - x \rVert_2$', fontsize=labelsize)
         ax.tick_params(axis='both', which='major', labelsize=ticksize)
-        # ax.set_ylim([-0.001, 0.001])
         plt.grid()
         plt.tight_layout()
         plt.savefig(os.path.join(figure_dir, "plot_traj_error_wrt_t_{:03d}.pdf".format(exp_num)))
@@ -224,11 +224,12 @@ if __name__ == "__main__":
         plt.savefig(os.path.join(figure_dir, "traj_true_dq_{:03d}.pdf".format(exp_num)))
         plt.close()
     
-    labelsize = 30
-    ticksize = 20
+    labelsize = 25
+    ticksize = 25
     ax_all.set_xlabel('Time [s]', fontsize=labelsize)
-    ax_all.set_ylabel(r'$\lVert x - z \rVert_2$', fontsize=labelsize)
+    ax_all.set_ylabel(r'$\lVert z(t) - x(t) \rVert_2$', fontsize=labelsize)
     ax_all.tick_params(axis='both', which='major', labelsize=ticksize)
+    ax_all.set_ylim([-0.0012, 0.012])
     plt.grid()
     plt.tight_layout()
     plt.legend(fontsize=ticksize)

@@ -56,7 +56,7 @@ def simulate(exp_num, all_x0):
     # Simulate the system using euler method
     print("==> Simulating...")
     num_trajs = all_x0.shape[0]
-    N = 1500
+    N = 1000
     dt = 0.01
     T = np.arange(0, N*dt, dt)
     X_true = np.zeros((num_trajs, N, state_dim), dtype=config.np_dtype)
@@ -87,12 +87,12 @@ def simulate(exp_num, all_x0):
 
 if __name__ == "__main__":
 
-    exp_nums = [141, 233, 63]
+    exp_nums = [142, 236, 62]
     labels = ['FCNs', 'LRNs', 'Ours']
     colors = ['tab:orange', 'tab:green', 'tab:blue']
 
     np.random.seed(0)
-    num_trajs = 20
+    num_trajs = 100
     all_x0 = np.random.uniform(-1, 1, (num_trajs, 2))
     state_bounds = np.array([2.5,2.5])
     all_x0 = all_x0 * state_bounds
@@ -145,12 +145,12 @@ if __name__ == "__main__":
         plt.savefig(os.path.join(figure_dir, "plot_traj_true_{:03d}.pdf".format(exp_num)))
         plt.close()
     
-    labelsize = 30
-    ticksize = 20
+    labelsize = 25
+    ticksize = 25
     ax_all.set_xlabel('Time [s]', fontsize=labelsize)
-    ax_all.set_ylabel(r'$\lVert x - z \rVert_2$', fontsize=labelsize)
+    ax_all.set_ylabel(r'$\lVert z(t) - x(t) \rVert_2$', fontsize=labelsize)
     ax_all.tick_params(axis='both', which='major', labelsize=ticksize)
-    ax_all.set_ylim([-0.002, 0.020])
+    ax_all.set_ylim([-0.0016, 0.016])
     plt.grid()
     plt.tight_layout()
     plt.legend(fontsize=ticksize)
