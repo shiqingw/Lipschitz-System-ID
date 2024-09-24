@@ -49,7 +49,7 @@ plt.tight_layout()
 
 # Draw test MSE
 ax = fig.add_subplot(cells[1])
-ax.plot(x, y_test, color="tab:red", linestyle='solid', linewidth=3, marker='o', 
+ax.plot(x, y_test, color="tab:orange", linestyle='solid', linewidth=3, marker='o', 
          markersize=12, zorder=2.0)
 ax.vlines(system_lipschitz, 0, max(y_test), colors="black", linestyles="dashed", linewidth=3, zorder=2.0)
 ax.text(system_lipschitz, 0.1, r"$K \approx {:.02f}$".format(system_lipschitz), ha='left', va='center', fontsize = 30)

@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
     exp_nums = [142, 236, 62]
     labels = ['FCNs', 'LRNs', 'Ours']
-    colors = ['tab:orange', 'tab:green', 'tab:blue']
+    colors = ['tab:blue', 'tab:orange', 'tab:green']
 
     np.random.seed(0)
     num_trajs = 100
@@ -113,7 +113,7 @@ if __name__ == "__main__":
 
         # Draw in the collective figure
         ax_all.plot(T, mean, linestyle='-', linewidth=2, label=label_name, color=color)
-        ax_all.fill_between(T, mean-std, mean+std, color=color, alpha=0.5)
+        ax_all.fill_between(T, mean-std, mean+std, color=color, alpha=0.25)
 
         # Draw in the individual figure
         figure_dir = "{}/eg2_results/{:03d}".format(str(Path(__file__).parent.parent), 0)

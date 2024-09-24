@@ -64,7 +64,7 @@ def draw(exp_num, all_q0):
     kp = 1.0
     kd = 2.0
     freq = 0.25
-    amplitude = 30.0
+    amplitude = 30.0 
 
     np.random.seed(0)
 
@@ -123,7 +123,7 @@ if __name__ == "__main__":
 
     exp_nums = [138, 234, 62]
     labels = ['FCNs', 'LRNs', 'Ours']
-    colors = ['tab:orange', 'tab:green', 'tab:blue']
+    colors = ['tab:blue', 'tab:orange', 'tab:green']
 
     np.random.seed(0)
     num_trajs = 100
@@ -147,7 +147,7 @@ if __name__ == "__main__":
 
         # Draw in the collective figure
         ax_all.plot(T, mean, linestyle='-', linewidth=2, label=label_name, color=color)
-        ax_all.fill_between(T, mean-std, mean+std, color=color, alpha=0.5)
+        ax_all.fill_between(T, mean-std, mean+std, color=color, alpha=0.25)
 
         # Draw in the individual figure
         figure_dir = "{}/eg3_results/{:03d}".format(str(Path(__file__).parent.parent), 0)
